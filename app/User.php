@@ -5,10 +5,13 @@ namespace App;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Zizaco\Entrust\Traits\EntrustUserTrait;
+use Laravel\Passport\HasApiTokens;
+
 class User extends Authenticatable
 {
-    use  Notifiable;
-use EntrustUserTrait; // add this trait to your user model
+    use  Notifiable, HasApiTokens;
+    use EntrustUserTrait; // add this trait to your user model
+
     /**
      * rules validasi untuk data suppliers.
      *
