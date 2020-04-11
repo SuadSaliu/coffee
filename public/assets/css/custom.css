@@ -48,14 +48,15 @@ text-align:center !important;
 
 }
 
+.tb-btn .btn {
+    zoom: 1.2;
+}
+
 #portfolio {
-
-	height: 500px;
-
+	min-height: 600px;
+    max-height: 94%;
 	overflow-y: auto;
-
 	margin: 0 -5px;
-
 }
 
 .cart-table-wrap {

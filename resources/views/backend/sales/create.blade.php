@@ -22,7 +22,8 @@
 						<div class="ibox-content" id="car_items" style="padding: 5px;">
 							<div class="cart-table-wrap">
 
-								<table width="100%" border="0" style="border-spacing: 5px; border-collapse: separate;" class="">
+								<table width="100%" border="0" style="border-spacing: 5px; border-collapse: separate;"
+									class="">
 
 									<tbody id="CartHTML">
 
@@ -31,7 +32,8 @@
 								</table>
 							</div>
 							<hr>
-							<table width="100%" border="0" style="border-spacing: 5px; border-collapse: separate;" class="">
+							<table width="100%" border="0" style="border-spacing: 5px; border-collapse: separate;"
+								class="">
 
 								<tbody>
 
@@ -77,26 +79,26 @@
 
 										</td>
 									</tr>
-									
+
 									<tr>
 										<td colspan=2>
-										<select id="OrderType" class="form-control"> 
-											<option value="pos">@lang('online_orders.order_store')</option>
-											<option value="order">@lang('online_orders.order_home')</option>
-										</select>
+											<select id="OrderType" class="form-control">
+												<option value="pos">@lang('online_orders.order_store')</option>
+												<option value="order">@lang('online_orders.order_home')</option>
+											</select>
 										</td>
 									</tr>
 									<input type="hidden" id="OrderType" value="pos">
 									<tr>
 										<td> <strong> Include Vat </strong></td>
 										<td>
-										<select id="VatInclude" class="form-control"> 
-											<option value="Yes">Yes</option>
-											<option value="No">No</option>
-										</select>
+											<select id="VatInclude" class="form-control">
+												<option value="Yes">Yes</option>
+												<option value="No">No</option>
+											</select>
 										</td>
 									</tr>
-									
+
 
 								</tbody>
 
@@ -124,42 +126,46 @@
 					</div>
 
 					<div class="ibox-content" style="padding-bottom: 0px;">
-						<div class="row">							
-						<div class="col-sm-6 col-md-12 col-lg-6">
-								<div class="form-group">
-									<button type="button" id="Checkout" class="btn btn-primary btn-block text-center">@lang('pos.checkout')</button>		 
-								</div>
-						</div>
+						<div class="row">
 							<div class="col-sm-6 col-md-12 col-lg-6">
 								<div class="form-group">
-									<button type="button" id="ClearCart" class="btn btn-danger btn-block text-center">@lang('pos.clear_cart')</button>
+									<button type="button" id="Checkout"
+										class="btn btn-primary btn-block text-center">@lang('pos.checkout')</button>
+								</div>
+							</div>
+							<div class="col-sm-6 col-md-12 col-lg-6">
+								<div class="form-group">
+									<button type="button" id="ClearCart"
+										class="btn btn-danger btn-block text-center">@lang('pos.clear_cart')</button>
 								</div>
 							</div>
 						</div>
 
-						<div class="row">							
+						<div class="row">
 							<div class="col-sm-6 col-md-12 col-lg-12">
-									<div class="form-group">
-										<button type="button" id="holdOrders" class="btn btn-success btn-block text-center">@lang('pos.hold_tables')</button>		 
-									</div>
+								<div class="form-group">
+									<button type="button" id="holdOrders"
+										class="btn btn-success btn-block text-center">@lang('pos.hold_tables')</button>
+								</div>
 							</div>
-							
+
 						</div>
-						
+
 					</div>
 
 				</div>
-				
+
 			</div>
 		</div>
 		<div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
 			<div class="ibox float-e-margins">
 				<div class="ibox-title" style="margin-bottom: 10px;">
 					<div class="toolbar mb2 mt2">
-						<button class="btn fil-cat" href="" data-rel="all">@lang('common.all')</button> @foreach($categories as $category)
-						<button class="btn fil-cat" data-rel="{{$category->id}}">{{ $category->name }}</button> @endforeach
-
-					</div>				
+						<button class="btn fil-cat" href="" data-rel="all">@lang('common.all')</button>
+						@foreach($categories as $category)
+						<button class="btn fil-cat" data-rel="{{$category->id}}">{{ $category->name }}</button>
+						@endforeach
+					</div>
 				</div>
 				<!--	<div class="ibox-content m-b-sm border-bottom">
 
@@ -184,16 +190,24 @@
 					<div class="col-xs-12 col-sm-4 col-md-6 col-lg-3 {{$product->category_id}} all">
 						<div class="widget white-bg text-center product_list h-100">
 							@if(file_exists('uploads/products/' . $product->id . '.jpg'))
-							<img width="100px" alt="image" class="img-circle" src="{{url('uploads/products/thumb/' . $product->id . '.jpg')}}">
+							<img width="100px" alt="image" class="img-circle"
+								src="{{url('uploads/products/thumb/' . $product->id . '.jpg')}}">
 							<h2 class="m-xs heading-size_image">{{$product->name}}</h2> @else
 							<img width="100px" alt="image" class="img-circle" src="{{url('herbs/noimage.jpg')}}">
-							<h2 style="padding-left:5px; text-align:left" class="m-xs heading-size_image">{{$product->name}}</h2> @endif
-							<?php $prices = json_decode($product->prices); $titles = json_decode($product->titles);?> @foreach($titles as $key=>$t)
-							<button data-price="{{$prices[$key]}}" data-id="{{$product->id}}" data-key="{{$key}}" data-size="{{$t}}" data-name="{{$product->name}} ({{$t}})" type="button" class="btn btn-sm btn-primary m-r-sm AddToCart tag-margin tag-btn">{{ $t }}</button> @endforeach						
-							</div>
+							<h2 style="padding-left:5px; text-align:left" class="m-xs heading-size_image">
+								{{$product->name}}</h2> @endif
+							<?php $prices = json_decode($product->prices); $titles = json_decode($product->titles);?>
+							@foreach($titles as $key=>$t)
+							<button data-price="{{$prices[$key]}}" data-id="{{$product->id}}" data-key="{{$key}}"
+								data-size="{{$t}}" data-name="{{$product->name}} ({{$t}})" type="button"
+								class="btn btn-sm btn-primary m-r-sm AddToCart tag-margin tag-btn">{{ $t }}
+								{{$prices[$key]}} €</button>
+							@endforeach
+						</div>
 					</div>
 					@endforeach
-				</div>			</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
@@ -205,7 +219,8 @@
 
 			<div class="modal-header">
 
-				<?php /*?><button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button><?php */?>
+				<?php /*?><button type="button" class="close" data-dismiss="modal"><span
+						aria-hidden="true">&times;</span><span class="sr-only">Close</span></button><?php */?>
 				<h4 style="float:left; color:red" id="TableNoCart"></h4>
 				<h4 class="modal-title" id="total_amount_model">0.00</h4>
 			</div>
@@ -220,7 +235,7 @@
 
 				<input type="hidden" id="payment_type" class="form-control" value="Cash">
 
-		
+
 				<div class="col-sm-12">
 
 					<p class="text-center">@lang('pos.how_would_you_pay')</p>
@@ -258,7 +273,8 @@
 
 				<div class="col-sm-6">
 					<div class="form-group">
-						<input type="text" id="total_given" placeholder="@lang('pos.total_paid')" class="form-control numberPad">
+						<input type="text" id="total_given" placeholder="@lang('pos.total_paid')"
+							class="form-control numberPad">
 					</div>
 				</div>
 				<div class="col-sm-6">
@@ -268,12 +284,12 @@
 				</div>
 				<div class="col-sm-6">
 					<div class="form-group">
-						 <select class="form-control" id="table_id">
-							 @foreach ($tables as $table)
-								<option value="{{$table->id}}">{{$table->table_name}}</option>
-							 @endforeach
-							
-						 </select>
+						<select class="form-control" id="table_id">
+							@foreach ($tables as $table)
+							<option value="{{$table->id}}">{{$table->table_name}}</option>
+							@endforeach
+
+						</select>
 					</div>
 				</div>
 				<div class="col-sm-6">
@@ -283,10 +299,11 @@
 				</div>
 
 				<div class="col-sm-12 text-right">
-					<button type="button" class="btn btn-warning"  id="holdOrder" >@lang('pos.hold_order')</button>
+					<button type="button" class="btn btn-warning" id="holdOrder">@lang('pos.hold_order')</button>
 					<button type="button" class="btn btn-white" data-dismiss="modal">@lang('pos.close')</button>
-				<input type="hidden" value="" id="id" />
-				<button type="button" id="completeOrder" class="btn btn-primary">@lang('pos.complete_order')</button>
+					<input type="hidden" value="" id="id" />
+					<button type="button" id="completeOrder"
+						class="btn btn-primary">@lang('pos.complete_order')</button>
 				</div>
 
 			</div>
@@ -319,10 +336,8 @@
 
 </div>
 
-<script type="text/javascript"> 
-
-
-$( "body" ).on( "click", "#holdOrders", function () {
+<script type="text/javascript">
+	$( "body" ).on( "click", "#holdOrders", function () {
 			var form_data = {
 				id:""
 			};
@@ -471,20 +486,21 @@ $("body").on("click",".deleteHoldOrder", function() {
 			</div>
 
 			<div class="modal-body clearfix">
-			
+
 				<div class="col-sm-12">
 					<div class="form-group">
-						<input type="text" id="mobile_number" placeholder="@lang('pos.mobile_number')" class="form-control numberPad">
+						<input type="text" id="mobile_number" placeholder="@lang('pos.mobile_number')"
+							class="form-control numberPad">
 					</div>
 				</div>
-				
+
 				<div class="col-sm-12">
 					<div class="form-group">
 						<h3 id="Client" style="text-align:center">Is a new client/is a former client</h3>
 					</div>
 				</div>
-				
-				
+
+
 				<div class="col-sm-6">
 					<div class="form-group">
 						<input type="text" id="full_name" placeholder="@lang('pos.full_name')" class="form-control ">
@@ -495,27 +511,27 @@ $("body").on("click",".deleteHoldOrder", function() {
 						<input type="text" id="address_c" placeholder="@lang('pos.address')" class="form-control">
 					</div>
 				</div>
-				
+
 				<div class="col-sm-12">
 					<div class="form-group">
 						<input type="text" id="comments_c" placeholder="@lang('pos.comment')" class="form-control">
 					</div>
 				</div>
-				
-				
-				
-	             <div class="col-sm-12 ">
+
+
+
+				<div class="col-sm-12 ">
 					<span id="errorMessage" style="color:red"> </span>
 				</div>
 
 				<div class="col-sm-12 text-right">
-					<button type="button" id="ClearForm" class="btn btn-white" >@lang('pos.close')</button>
+					<button type="button" id="ClearForm" class="btn btn-white">@lang('pos.close')</button>
 
 					<button type="button" id="CustomerNext" class="btn btn-primary">@lang('pos.Next')</button>
 					<span id="errorMessage" style="color:red"> </span>
 				</div>
-				
-				
+
+
 
 			</div>
 
@@ -525,8 +541,8 @@ $("body").on("click",".deleteHoldOrder", function() {
 
 </div>
 
-<script type="text/javascript"> 
-$("body").on("click","#ClearForm", function() {
+<script type="text/javascript">
+	$("body").on("click","#ClearForm", function() {
 	$("#full_name").val("");
 	$("#neighborhood").val("");
 	$("#address_c").val("");
@@ -551,24 +567,24 @@ $("body").on("click","#CustomerNext", function() {
 	}
 	
 	
-					$.ajax({
-						type: 'POST',
-						headers: {
-							'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-						},
-						url: '<?php echo url("sales/store_customer"); ?>',
-						data: form_data,
-						success: function (msg) {
-							var obj = $.parseJSON(msg);
-							if(obj['message'] == "OK") { 
-								$("#myModalHome").modal("hide");
-								$("#myModal").modal("show");
-								$("#customer_id").val(obj['id']);
-							} else { 
-								
-							}
-						}
-					});
+	$.ajax({
+		type: 'POST',
+		headers: {
+			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+		},
+		url: '<?php echo url("sales/store_customer"); ?>',
+		data: form_data,
+		success: function (msg) {
+			var obj = $.parseJSON(msg);
+			if(obj['message'] == "OK") { 
+				$("#myModalHome").modal("hide");
+				$("#myModal").modal("show");
+				$("#customer_id").val(obj['id']);
+			} else { 
+				
+			}
+		}
+	});
 					
 });
 </script>
@@ -583,60 +599,49 @@ $("body").on("click","#CustomerNext", function() {
 
 <style type="text/css">
 
-	.nmpd-grid {
+	@media screen and (min-width: 768px) {
+		.wrapper {
+			height: calc(67vw - 12em) !important;
+		}
 
-		border: none;
-
-		padding: 20px;
-
+		.wrapper > .row,
+		.wrapper > .row .col-xs-12,
+		.wrapper > .row .col-xs-12 .ibox {
+			height: 100%;
+		}
 	}
 
-	
+	.nmpd-grid {
+		border: none;
+		padding: 20px;
+	}
+
 
 	.nmpd-grid>tbody>tr>td {
-
 		border: none;
-
 	}
 
 	/* Some custom styling for Bootstrap */
 
-	
+
 
 	.qtyInput {
-
 		display: block;
-
 		width: 100%;
-
 		padding: 6px 12px;
-
 		color: #555;
-
 		background-color: white;
-
 		border: 1px solid #ccc;
-
 		border-radius: 4px;
-
-		-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
-
+		webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
 		box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
-
-		-webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
-
-		-o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
-
+		webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+		o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
 		transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
-
 	}
-
 </style>
 <script>
-
-
-
-$("body").on("click",".payment-option-icon", function() {
+	$("body").on("click",".payment-option-icon", function() {
 		$(".payment-option-icon").removeClass("text-success");
 		$(this).addClass("text-success");
 		$("#payment_type").val($(this).attr("data-id"));
@@ -960,7 +965,6 @@ $("#TableNoCart").text("");
 </script>
 
 <style>
-
 	.cart-item {
 
 		max-height: 160px;
@@ -969,7 +973,7 @@ $("#TableNoCart").text("");
 
 	}
 
-	
+
 
 	.scale-anm {
 
@@ -977,7 +981,7 @@ $("#TableNoCart").text("");
 
 	}
 
-	
+
 
 	.tile {
 
@@ -991,11 +995,11 @@ $("#TableNoCart").text("");
 
 	}
 
-	
+
 
 	.tile:hover {}
 
-	
+
 
 	.product_list {
 
@@ -1013,11 +1017,9 @@ $("#TableNoCart").text("");
 
 		text-align: left;
 	}
-
 </style>
 
 <script>
-
 	$( "body" ).on( "click", ".close", function () {
 		alert( "close" );
 	} );

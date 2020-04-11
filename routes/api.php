@@ -13,6 +13,9 @@ use Illuminate\Http\Request;
 |
 */
 
+Route::get('login', 'api\ProductController@index');
+
+
 Route::group([
     'prefix' => 'auth'
 ], function () {

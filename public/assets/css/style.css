@@ -1391,8 +1391,12 @@ button.dim:active:before {
 .chat-element .photos {
   margin: 10px 0;
 }
+.ml-2,
 .right.chat-element > .pull-right {
   margin-left: 10px;
+}
+.mb-0 {
+  margin-bottom: 0 !important;
 }
 .chat-photo {
   max-height: 180px;
@@ -8295,5 +8299,4 @@ body.md-skin {
 .modal-footer{
   border-top: none !important;
 }
-
 

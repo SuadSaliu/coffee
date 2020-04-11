@@ -2,236 +2,253 @@
 
 @section('content')
 <?php $currency =  setting_by_key("currency"); ?>
- <!-- Header Area Start 
+<!-- Header Area Start 
     ====================================================== -->
-    <section class="banner-sec internal-banner" style="background-image:url(assets/frontend/img/menu-page.jpg)">
-    
-        <!-- Start: slider-overview -->
-        <div class="balck-solid">
-        
-            <!-- Start: slider -->
-            <div class="container">
-                <div class="banner-mid-text internal-header">
-                
-                    <!-- Start: flexslider -->
-                    <div class="flexslider">
-                        <ul>
-                            <!-- Start: flexslider-one -->
-                            <li>
-                                <h2>Our menu</h2>
-                                <div class="hr-outtr-line"><hr><i class="fa fa-heart" aria-hidden="true"></i><hr></div>
-                            </li>
-                            <!-- End: flexslider-one -->
-                        </ul>
-                    </div>
-                    <!-- End: flexslider -->
-            
-                </div>
-            </div> 
-            <!-- End: slider -->
-            
-        </div>  
-        <!-- End: slider-overview -->
-    </section>
-    <!-- =================================================
-    Header Area End -->
-    
-    
-    <!-- Reservation  Area Start 
-    ====================================================== -->
-    <section class="resrvation-top-area our-top-sec" id="Welcome">
+<section class="banner-sec internal-banner" style="background-image:url(assets/frontend/img/menu-page.jpg)">
 
-    	<div class="container text-center">
-            <div class="row">
-                <h2><span>real taste</span>categories</h2>
-                <div class="hr-outtr-line"><hr><i class="fa fa-heart" aria-hidden="true"></i><hr></div>
+    <!-- Start: slider-overview -->
+    <div class="balck-solid">
+
+        <!-- Start: slider -->
+        <div class="container">
+            <div class="banner-mid-text internal-header">
+
+                <!-- Start: flexslider -->
+                <div class="flexslider">
+                    <ul>
+                        <!-- Start: flexslider-one -->
+                        <li>
+                            <h2>Our menu</h2>
+                            <div class="hr-outtr-line">
+                                <hr><i class="fa fa-heart" aria-hidden="true"></i>
+                                <hr>
+                            </div>
+                        </li>
+                        <!-- End: flexslider-one -->
+                    </ul>
+                </div>
+                <!-- End: flexslider -->
+
             </div>
         </div>
-    </section>
-    <!-- =================================================
-    AReservation Area End -->
-    
-    
-    <!--  Amenities  Area Start 
-    ====================================================== -->
-    <section class="our-menu-bg">
-        <div class="container">
-            <div class="row">
-            
-                <!-- Start: Our-menu-Mains************************Section-one -->
-                <div class="our-menu-details">
-                                    
-                    <div class="col-xs-12 col-sm-2 col-lg-2 bg-grey menu-list no-pad">
-                        <h5>Categories</h5>
-                        <ul class="">
-                            <li class="fil-cat" data-rel="all">All</li>
-                            @foreach($categories as $cat)
-                            <li style="cursor:pointer;" class="fil-cat" data-rel="{{$cat->id}}">{{$cat->name}}</li>
-                            @endforeach
-                            
-                        </ul>
-                        
-                    </div>
+        <!-- End: slider -->
 
-                    <!-- Start: Our-menu-one -->
-                    <div class="col-xs-12 col-sm-7 col-lg-7 " id="portfolio">
+    </div>
+    <!-- End: slider-overview -->
+</section>
+<!-- =================================================
+    Header Area End -->
+
+
+<!-- Reservation  Area Start 
+    ====================================================== -->
+<section class="resrvation-top-area our-top-sec" id="Welcome">
+
+    <div class="container text-center">
+        <div class="row">
+            <h2><span>real taste</span>categories</h2>
+            <div class="hr-outtr-line">
+                <hr><i class="fa fa-heart" aria-hidden="true"></i>
+                <hr>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- =================================================
+    AReservation Area End -->
+
+
+<!--  Amenities  Area Start 
+    ====================================================== -->
+<section class="our-menu-bg">
+    <div class="container">
+        <div class="row">
+
+            <!-- Start: Our-menu-Mains************************Section-one -->
+            <div class="our-menu-details">
+
+                <div class="col-xs-12 col-sm-2 col-lg-2 bg-grey menu-list no-pad">
+                    <h5>Categories</h5>
+                    <ul class="">
+                        <li class="fil-cat" data-rel="all">All</li>
                         @foreach($categories as $cat)
-                        @foreach($cat->products as $pro)
-                       
-                        <div class="clearfix {{$pro->category_id}} all marginBtn">
-                            <div class="col-sm-2"><img class="img-circle" width="100" src="{{url('uploads/products/thumb/' . $pro->id . '.jpg')}}" class="img-responsive"></div>
-                            <!-- Start: Our-menu-lft -->
-                            
-                            <div class="or-lft-menu col-sm-7">
-                                <h5><span>{{$pro->name}}</span></h5>
-                                <p class="hidden-xs">{{$pro->description}}</p>
-                            </div>
-                            
-                            <!-- End: Our-menu-lft -->
-                            <!-- Start: Our-menu-rgt -->
-            <?php 
+                        <li style="cursor:pointer;" class="fil-cat" data-rel="{{$cat->id}}">{{$cat->name}}</li>
+                        @endforeach
+
+                    </ul>
+
+                </div>
+
+                <!-- Start: Our-menu-one -->
+                <div class="col-xs-12 col-sm-7 col-lg-7 " id="portfolio">
+                    @foreach($categories as $cat)
+                    @foreach($cat->products as $pro)
+
+                    <div class="clearfix {{$pro->category_id}} all marginBtn">
+                        <div class="col-sm-2"><img class="img-circle" width="100"
+                                src="{{url('uploads/products/thumb/' . $pro->id . '.jpg')}}" class="img-responsive">
+                        </div>
+                        <!-- Start: Our-menu-lft -->
+
+                        <div class="or-lft-menu col-sm-7">
+                            <h5><span>{{$pro->name}}</span></h5>
+                            <p class="hidden-xs">{{$pro->description}}</p>
+                        </div>
+
+                        <!-- End: Our-menu-lft -->
+                        <!-- Start: Our-menu-rgt -->
+                        <?php 
                                         $prices = json_decode($pro->prices); 
                                         $titles = json_decode($pro->titles); 
             ?>
-                                        @foreach($titles as $key=>$t)
-                            
-                                <div class="or-rgt-menu col-xs-12 col-sm-3">
-                                    <h1>{{$t }} <strong class="pull-right"><?php echo $currency; ?>{{$prices[$key]}}</strong></h1>
-                                    <h2 style="cursor:pointer;" class="AddToCart" data-price="{{$prices[$key]}}" data-id="{{$pro->id}}" data-key="{{$key}}" data-size="{{$t}}" data-name="{{$pro->name}}">+</h2>
-                                </div>
-                            
-                            @endforeach
-                            
+                        @foreach($titles as $key=>$t)
 
-                            <!-- End: Our-menu-rgt -->
+                        <div class="or-rgt-menu col-xs-12 col-sm-3">
+                            <h1>{{$t }} <strong class="pull-right"><?php echo $currency; ?>{{$prices[$key]}}</strong>
+                            </h1>
+                            <h2 style="cursor:pointer;" class="AddToCart" data-price="{{$prices[$key]}}"
+                                data-id="{{$pro->id}}" data-key="{{$key}}" data-size="{{$t}}"
+                                data-name="{{$pro->name}}">+</h2>
                         </div>
-                        <!-- End:  -->
+
                         @endforeach
-                        @endforeach
-                        
-                       
+
+
+                        <!-- End: Our-menu-rgt -->
                     </div>
-                    <div class="col-xs-12 col-sm-3 col-lg-3 bg-grey menu-list no-pad">
-                        <h5>Your Order <i class="fa fa-shopping-cart white pull-right"></i></h5>                        
-                        <ul id="CartHTML"> 
-                            <li class="list-pad">VAT(<?php echo setting_by_key("vat"); ?>%) &ensp;<span class="pull-right"> 0.00</li>
-                            <li class="list-pad">Delivery Fee &ensp;<span class="pull-right">0.00</li>
-                        </ul>  
-						
-                        <a type="submit" data-toggle="modal" data-target="#myModal" class="btn addTo-cart btn-group-justified" value="">Checkout</a>                        
-                    </div>
+                    <!-- End:  -->
+                    @endforeach
+                    @endforeach
+
+
                 </div>
-                <!-- End: Our-menu-Mains -->           
-               
+                <div class="col-xs-12 col-sm-3 col-lg-3 bg-grey menu-list no-pad">
+                    <h5>Your Order <i class="fa fa-shopping-cart white pull-right"></i></h5>
+                    <ul id="CartHTML">
+                        <li class="list-pad">VAT(<?php echo setting_by_key("vat"); ?>%) &ensp;<span class="pull-right">
+                                0.00</li>
+                        <li class="list-pad">Delivery Fee &ensp;<span class="pull-right">0.00</li>
+                    </ul>
+
+                    <a type="submit" data-toggle="modal" data-target="#myModal"
+                        class="btn addTo-cart btn-group-justified" value="">Checkout</a>
+                </div>
             </div>
+            <!-- End: Our-menu-Mains -->
+
         </div>
-    </section>
-    <!-- =================================================
+    </div>
+</section>
+<!-- =================================================
     Amenities  Area End -->
 
-    		<div id="myModal" class="modal fade cusModal" role="dialog">
-		  	<div class="modal-dialog">
-			    <!-- Modal content-->
-			    <div class="modal-content">
-			      <div class="modal-header">
-			        <button type="button" class="close" data-dismiss="modal">&times;</button>			        
-					<h4 class="text-center sub-heading1">Ready to get started</h4>
-			      </div>
-			      <div class="modal-body col-sm-12">
-			      	<div class="col-sm-12 form-group"> <div style="color:red" id="errors"> </div>
-            		</div>
-						<div class="col-sm-6 col-lg-6 form-group">
-							<label>Full Name</label>
-							<input type="text" class="form-control" id="name" name="name" placeholder="Name" autocomplete="off" data-field_type="input">
-						</div>
-						<div class="col-sm-6 col-lg-6 form-group">
-							<label>Email</label>
-							<input type="email" class="form-control" id="email" name="email" placeholder="Email">
-						</div>
-						<div class="col-sm-6 col-lg-6 form-group">
-							<label>Phone</label>
-							<input type="text" class="form-control"  id="phone" name="phone" placeholder="Phone">
-						</div>
-						<div class="col-sm-6 col-lg-6 form-group">
-							<label>Address</label>
-							<input type="text" class="form-control"  id="address" name="company" placeholder="Company">
-						</div>
-						<?php $stripe_payment = setting_by_key("stripe"); 
+<div id="myModal" class="modal fade cusModal" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="text-center sub-heading1">Ready to get started</h4>
+            </div>
+            <div class="modal-body col-sm-12">
+                <div class="col-sm-12 form-group">
+                    <div style="color:red" id="errors"> </div>
+                </div>
+                <div class="col-sm-6 col-lg-6 form-group">
+                    <label>Full Name</label>
+                    <input type="text" class="form-control" id="name" name="name" placeholder="Name" autocomplete="off"
+                        data-field_type="input">
+                </div>
+                <div class="col-sm-6 col-lg-6 form-group">
+                    <label>Email</label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Email">
+                </div>
+                <div class="col-sm-6 col-lg-6 form-group">
+                    <label>Phone</label>
+                    <input type="text" class="form-control" id="phone" name="phone" placeholder="Phone">
+                </div>
+                <div class="col-sm-6 col-lg-6 form-group">
+                    <label>Address</label>
+                    <input type="text" class="form-control" id="address" name="company" placeholder="Company">
+                </div>
+                <?php $stripe_payment = setting_by_key("stripe"); 
 							if($stripe_payment == "yes") { 
 						?>
-						<div class="col-sm-6 col-lg-6 form-group">
-							<div class="radio">
-							  <label><input type="radio" class="payment_option" checked value="cash" name="payment">Cash On Delivery</label>
-							</div>
-							<!-- <label>Cash On Delivery</label>
+                <div class="col-sm-6 col-lg-6 form-group">
+                    <div class="radio">
+                        <label><input type="radio" class="payment_option" checked value="cash" name="payment">Cash On
+                            Delivery</label>
+                    </div>
+                    <!-- <label>Cash On Delivery</label>
 							<input type="radio" class="form-control payment_option" checked  value="cash" name="payment" > -->
-						</div>
-						<div class="col-sm-6 col-lg-6 form-group">
-							<div class="radio">
-							  <label><input type="radio" class="payment_option" value="card" name="payment">Pay with Debit/Credit Card</label>
-							</div>
-							<!-- <label>Pay with Debit/Credit Card</label>
+                </div>
+                <div class="col-sm-6 col-lg-6 form-group">
+                    <div class="radio">
+                        <label><input type="radio" class="payment_option" value="card" name="payment">Pay with
+                            Debit/Credit Card</label>
+                    </div>
+                    <!-- <label>Pay with Debit/Credit Card</label>
 							<input type="radio" class="form-control payment_option"  value="card" name="payment" > -->
-						</div>
-						<input type="hidden" value="" id="payment_type" />
-						<input type="hidden" value="" id="total_cost" />
-						<span id="card_form"> 
-						<div class="col-sm-12 col-lg-12 form-group">
-							<label>Card Number</label>
-							<input type="text" class="form-control"  id="cc_number" name="company" placeholder="Card Number">
-						</div>
-						
-						<div class="col-sm-3 col-lg-4 form-group">
-							<label>Expiry Month</label>
-							<select class="form-control" id="cc_month"> 
-								@for($i = 1; $i<=12; $i++)
-								<option value="{{$i}}"> {{$i}} </option>
-								@endfor
-							</select>
-						</div>
-						<div class="col-sm-3 col-lg-4 form-group">
-							<label>Expiry Year</label>
-							<select class="form-control" id="cc_year"> 
-								@for($i = date('Y'); $i<= date('Y') + 6; $i++)
-								<option value="{{$i}}"> {{$i}} </option>
-								@endfor
-							</select>
-						</div>
-						
-						<div class="col-sm-4 col-lg-4 form-group">
-							<label>CC Code</label>
-							<input type="text" class="form-control"  id="cc_code" name="company" placeholder="Card Number">
-						</div>
-						</span>
-							<?php } ?>
-						
-						
-						<div class="col-sm-12 col-lg-12 form-group">
-							<label>Comment</label>
-							<textarea class="form-control" rows="2" placeholder="Message" id="comment" name="message"></textarea>
-						</div>
-									<input type="hidden" id="vat" class="form-control" value="0.00">
-                                    <input type="hidden" id="delivery_cost" class="form-control" value="<?php echo setting_by_key("delivery_cost"); ?>">
-									
-						<div class="col-sm-6">
-							<div class="col-xs-12 col-sm-12">					
-								<button type="cancel" class="btn submit-btn col-sm-12" data-dismiss="modal">Cancel</button>
-							</div>
-						</div>
-						<div class="col-sm-6">
-							<div class="col-xs-12 col-sm-12">					
-								<button type="submit" class="btn submit-btn col-sm-12 ConfirmOrder">Complete</button>
-							</div>							
-						</div>
-			      </div>
-			      	<div class="modal-footer">
-				        
-				    </div>
-			    </div>
-		  	</div>
-		</div>
-		<script type="text/javascript"> 
-			$("#card_form").hide(100);
+                </div>
+                <input type="hidden" value="" id="payment_type" />
+                <input type="hidden" value="" id="total_cost" />
+                <span id="card_form">
+                    <div class="col-sm-12 col-lg-12 form-group">
+                        <label>Card Number</label>
+                        <input type="text" class="form-control" id="cc_number" name="company" placeholder="Card Number">
+                    </div>
+
+                    <div class="col-sm-3 col-lg-4 form-group">
+                        <label>Expiry Month</label>
+                        <select class="form-control" id="cc_month">
+                            @for($i = 1; $i<=12; $i++) <option value="{{$i}}"> {{$i}} </option>
+                                @endfor
+                        </select>
+                    </div>
+                    <div class="col-sm-3 col-lg-4 form-group">
+                        <label>Expiry Year</label>
+                        <select class="form-control" id="cc_year">
+                            @for($i = date('Y'); $i<= date('Y') + 6; $i++) <option value="{{$i}}"> {{$i}} </option>
+                                @endfor
+                        </select>
+                    </div>
+
+                    <div class="col-sm-4 col-lg-4 form-group">
+                        <label>CC Code</label>
+                        <input type="text" class="form-control" id="cc_code" name="company" placeholder="Card Number">
+                    </div>
+                </span>
+                <?php } ?>
+
+
+                <div class="col-sm-12 col-lg-12 form-group">
+                    <label>Comment</label>
+                    <textarea class="form-control" rows="2" placeholder="Message" id="comment"
+                        name="message"></textarea>
+                </div>
+                <input type="hidden" id="vat" class="form-control" value="0.00">
+                <input type="hidden" id="delivery_cost" class="form-control"
+                    value="<?php echo setting_by_key("delivery_cost"); ?>">
+
+                <div class="col-sm-6">
+                    <div class="col-xs-12 col-sm-12">
+                        <button type="cancel" class="btn submit-btn col-sm-12" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="col-xs-12 col-sm-12">
+                        <button type="submit" class="btn submit-btn col-sm-12 ConfirmOrder">Complete</button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $("#card_form").hide(100);
 			$("body").on("click" , ".payment_option" , function() {
 				if($(this).val() == "card") { 
 					$("#card_form").show(100);
@@ -241,16 +258,16 @@
 					$("#payment_type").val("cash");
 				}
 			});
-		</script>
+</script>
 
-    
 
- 
-    <link href="{{url('assets/css/plugins/sweetalert/sweetalert.css')}}" rel="stylesheet">
-    <script src="{{url('assets/js/plugins/sweetalert/sweetalert.min.js')}}"></script>
-    <script src="{{url('assets/js/lodash.min.js')}}"></script>
-   
-    <script>
+
+
+<link href="{{url('assets/css/plugins/sweetalert/sweetalert.css')}}" rel="stylesheet">
+<script src="{{url('assets/js/plugins/sweetalert/sweetalert.min.js')}}"></script>
+<script src="{{url('assets/js/lodash.min.js')}}"></script>
+
+<script>
     $("body").on("click" , ".ConfirmOrder" , function() {
         var msg = "";
         
@@ -476,10 +493,10 @@ function deleteItemFromCart(item) {
         
 }
 $(function() {
-        var selectedClass = "";
-        $(".fil-cat").click(function(){ 
+    var selectedClass = "";
+    $(".fil-cat").click(function(){ 
         selectedClass = $(this).attr("data-rel"); 
-     $("#portfolio").fadeTo(100, 0.1);
+    $("#portfolio").fadeTo(100, 0.1);
         $("#portfolio > div").not("."+selectedClass).fadeOut().removeClass('scale-anm');
     setTimeout(function() {
       $("."+selectedClass).fadeIn().addClass('scale-anm');
@@ -490,5 +507,5 @@ $(function() {
 });
 </script>
 
-    
+
 @endsection

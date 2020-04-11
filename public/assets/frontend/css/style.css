@@ -1127,8 +1127,12 @@ button.submit:hover {
 .our-menu-bg {
     padding-bottom: 115px;
 	background:url(../img/01_Menu.jpg) no-repeat;
-	background-size:100%;
+    background-size:100%;
 }
+.our-menu-bg > .container > .row {
+    margin-bottom: 10em !important;
+}
+
 .our-menu-details {
     margin-bottom: 60px;
 }
