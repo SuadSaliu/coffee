@@ -98,8 +98,8 @@
                         <!-- End: Our-menu-lft -->
                         <!-- Start: Our-menu-rgt -->
                         <?php 
-                                        $prices = json_decode($pro->prices); 
-                                        $titles = json_decode($pro->titles); 
+                            $prices = json_decode($pro->prices); 
+                            $titles = json_decode($pro->titles); 
                         ?>
                         @foreach($titles as $key=>$t)
 

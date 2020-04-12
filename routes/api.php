@@ -13,8 +13,8 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::get('products', 'api\ProductController@index');
-
+Route::get('products', 'api\ProductController@products');
+Route::get('categories', 'api\ProductController@categories');
 
 Route::group([
     'prefix' => 'auth'

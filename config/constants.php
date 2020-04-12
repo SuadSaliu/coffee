@@ -1,3 +1,5 @@
+<?php
+
 return [
     'mail_name' => 'Test Mail',
     'mail_email' => 'www.domain.es',
