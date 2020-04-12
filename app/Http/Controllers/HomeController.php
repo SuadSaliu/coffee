@@ -13,6 +13,7 @@ use DB,
     Mail;
 use App\Mail\Test;
 use App\Mail\Contact;
+use Config;
 
 class HomeController extends Controller
 {
@@ -66,7 +67,7 @@ class HomeController extends Controller
             "email" => $email,
             "message" => $message
         );
-        Mail::to("arfan67@gmail.com")->send(new Contact($content));
+        Mail::to(Config::get('constants.mail_email'))->send(new Contact($content));
         Mail::to($email)->send(new Contact($content));
         echo "success";
     }
@@ -83,11 +84,11 @@ class HomeController extends Controller
     public function testMail() 
     {
         $content = array(
-            "name" => "Arfan"
+            "name" => Config::get('constants.mail_name')
         );
 
         //return view("emails.booking");
-        Mail::to("arfan67@gmail.com")->send(new Test($content));
+        Mail::to(Config::get('constants.mail_email'))->send(new Test($content));
 
         echo 'Mail Sent!';
     }

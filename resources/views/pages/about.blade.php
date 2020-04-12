@@ -48,7 +48,7 @@
                 <div class="abut-stry-mid">
                     <!-- Start: Our Story-left -->
                     <div class="col-md-6 abut-story-left">
-                        <img src="{{url('uploads/pages/' . $page->image)}}" alt="">
+                        <img loading="lazy" src="{{url('uploads/pages/' . $page->image)}}" alt="">
                     </div>
                     <!-- End: Our Story-left -->
                     

@@ -1,22 +1,20 @@
 <link href="{{ asset('assets/dist/cropper.css')}}" rel="stylesheet">
-  <script src="{{ asset('assets/dist/cropper.js') }}"></script>
-<style> 
-.cropper-container.cropper-bg {
-  background: #fff !important;
-  background-image:none !important;
-}
+<script src="{{ asset('assets/dist/cropper.js') }}"></script>
+<style>
+  .cropper-container.cropper-bg {
+    background: #fff !important;
+    background-image: none !important;
+  }
 
-.cropper-modal {
+  .cropper-modal {
     opacity: .5;
     background-color: #fff;
-}
+  }
 
-/*.modal-body { padding-left:0px; padding-right:0px;}*/
-
+  /*.modal-body { padding-left:0px; padding-right:0px;}*/
 </style>
- <script>
-
-$(function() {
+<script>
+  $(function() {
 var cropper;
 				
 				var options = {
@@ -30,7 +28,7 @@ var cropper;
 						 $("#cropped_value").val(parseInt(e.detail.width) + "," + parseInt(e.detail.height) + "," + parseInt(e.detail.x) + "," + parseInt(e.detail.y) + "," +  parseInt(e.detail.rotate));
 					  },
 					   ready: function () {
-							$("#image_loader").html('');
+							$("#image_loader").hide();
 					   }
 					};
 	
@@ -61,7 +59,7 @@ $(".modal").on("hide.bs.modal", function() {
 $(".modal").on("show.bs.modal", function() {
 	
 	if($("#check_cropper").val() != 1) { 
-		$("#image_loader").html('<i class="fa fa-spinner fa-spin " style="font-size:36px;color:#f79426"></i>');
+		$("#image_loader").show();
 		
 		var image = document.getElementById('image_cropper');
 		cropper = new Cropper(image, options);
@@ -79,9 +77,11 @@ $("body").on("click" , ".rotate" , function() {
 		cropper.rotate(degree);
 });
 
+$("#loader").hide();
+
 $("body").on("click" , "#Save" , function() {
 	var form_data = $('#uploadimage')[0];
-	$("#loader").html('<i class="fa fa-spinner fa-spin " style="font-size:24px;color:#f79426"></i>');
+	$("#loader").show();
 	$("#Save").prop("disabled" , true);
 	$.ajax({
 				url: "<?php echo url('category/upload_photo_crop'); ?>", // Url to which the request is send
@@ -100,7 +100,7 @@ $("body").on("click" , "#Save" , function() {
                         res = res + "?v="+num;
                        $('#image_source,#image,#user_pro_image').attr('src', res);
                       
-                       $("#loader").html('');
+                       $("#loader").hide();
                        $("#Save").prop("disabled" , false);
                         $("#myModal").modal("hide");
                         $('.upload-pic,.choose-profile-pic,#image_preview').show();
@@ -155,14 +155,12 @@ $(document).on("change","#cropper",function() {
 
 });
 
-    <!-- $(function () { -->
-      
-    <!-- }); -->
-  </script>
-<style> 
-img {
-  max-width: 100%; /* This rule is very important, please do not ignore this! */
-}
+</script>
+<style>
+  img {
+    max-width: 100%;
+    /* This rule is very important, please do not ignore this! */
+  }
 </style>
 
 <div id="myModal" class="modal fade" role="dialog">
@@ -175,25 +173,31 @@ img {
         <h4 class="modal-title">Product Photo</h4>
       </div>
       <div class="modal-body">
-      <div>
-         <div width="100%" style="text-align:center" id="image_loader">  </div>
-         <img width="100%"  src="" id="image_cropper">
-            <br>
-        <p class="text-center"> 
-                      <button type="button" class="btn btn-primary rotate" data-method="rotate" data-option="-30"><i class="fa fa-undo"></i></button>
-                      <button type="button" class="btn btn-primary rotate" data-method="rotate" data-option="30"><i class="fa fa-repeat"></i></button>
-</p>
-      
+        <div>
+          <div width="100%" style="text-align:center" id="image_loader">
+            <i class="fa fa-spinner fa-spin " style="font-size:36px;color:#f79426"></i>
+          </div>
+          <img loading="lazy" width="100%" src="" id="image_cropper">
+          <br>
+          <p class="text-center">
+            <button type="button" class="btn btn-primary rotate" data-method="rotate" data-option="-30"><i
+                class="fa fa-undo"></i></button>
+            <button type="button" class="btn btn-primary rotate" data-method="rotate" data-option="30"><i
+                class="fa fa-repeat"></i></button>
+          </p>
+
+        </div>
+        <input type="hidden" id="check_cropper" value="0" />
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" id="loader">
+            <i class="fa fa-spinner fa-spin " style="font-size:24px;color:#f79426"></i>
+          </button>
+
+          <input type="button" class="btn btn-primary" id="Save" value="Save Image"> </button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
       </div>
-      <input type="hidden" id="check_cropper" value="0" />
-      
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" id="loader"></button>
-      
-          <input type="button" class="btn btn-primary" id="Save" value="Save Image">  </button>
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
-        </div>
     </div>
 
   </div>

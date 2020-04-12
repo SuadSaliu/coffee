@@ -52,7 +52,7 @@
                                 @forelse ($products as $key => $product)
                                 <tr class="gradeX">
                                     <td>{{ $products->firstItem() + $key }}</td>
-                                    <td><img width="100px"
+                                    <td><img loading="lazy" width="100px"
                                             src="{{url('uploads/products/thumb/' .$product->id . '.jpg')}}"></td>
                                     <td>{{ $product->name }}</td>
                                     <td>

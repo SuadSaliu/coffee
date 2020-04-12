@@ -85,7 +85,7 @@
                     @foreach($cat->products as $pro)
 
                     <div class="clearfix {{$pro->category_id}} all marginBtn">
-                        <div class="col-sm-2"><img class="img-circle" width="100"
+                        <div class="col-sm-2"><img loading="lazy" class="img-circle" width="100"
                                 src="{{url('uploads/products/thumb/' . $pro->id . '.jpg')}}" class="img-responsive">
                         </div>
                         <!-- Start: Our-menu-lft -->
@@ -100,7 +100,7 @@
                         <?php 
                                         $prices = json_decode($pro->prices); 
                                         $titles = json_decode($pro->titles); 
-            ?>
+                        ?>
                         @foreach($titles as $key=>$t)
 
                         <div class="or-rgt-menu col-xs-12 col-sm-3">

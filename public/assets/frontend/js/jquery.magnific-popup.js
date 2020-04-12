@@ -789,7 +789,7 @@ MagnificPopup.prototype = {
 						if(el.is('img')) {
 							el.attr('src', value);
 						} else {
-							el.replaceWith( '<img src="'+value+'" class="' + el.attr('class') + '" />' );
+							el.replaceWith( '<img loading="lazy" src="'+value+'" class="' + el.attr('class') + '" />' );
 						}
 					} else {
 						el.attr(arr[1], value);
@@ -1842,7 +1842,7 @@ $.magnificPopup.registerModule('gallery', {
 			_mfpTrigger('LazyLoad', item);
 
 			if(item.type === 'image') {
-				item.img = $('<img class="mfp-img" />').on('load.mfploader', function() {
+				item.img = $('<img loading="lazy" class="mfp-img" />').on('load.mfploader', function() {
 					item.hasSize = true;
 				}).on('error.mfploader', function() {
 					item.hasSize = true;

@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::get('login', 'api\ProductController@index');
+Route::get('products', 'api\ProductController@index');
 
 
 Route::group([

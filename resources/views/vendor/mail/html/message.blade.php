@@ -3,7 +3,7 @@
     @slot('header')
         @component('mail::header', ['url' => config('app.url')])
         	<div class="logo">
-                <img src="http://pos.templatesvalley.com/assets/frontend/img/logo_mail.png" alt="" />
+                <img loading="lazy" src="http://pos.templatesvalley.com/assets/frontend/img/logo_mail.png" alt="" />
             </div>
             <?php /* ?>{{ config('app.name') }} <?php */ ?>
         @endcomponent

@@ -93,7 +93,7 @@
 							 <label class="col-sm-2 control-label">Logo</label>
 								<div class="form-group col-sm-10">
 									<input type="file" name="logo" class="form-control"/> 
-									<img src="{{url('uploads/logo.jpg?r=' . rand(0,999))}}" width="100px">
+									<img loading="lazy" src="{{url('uploads/logo.jpg?r=' . rand(0,999))}}" width="100px">
                                 									
                                 </div>
 								</div>

@@ -54,11 +54,11 @@
                 <?php if(!empty($sliders)) { foreach ($sliders as $row) { ?>
                     <tr id="{{$row->id}}">
 
-                        <td> <img width="150px" src="{{url('uploads/slider/' . $row->image)}}"> </td>
+                        <td> <img loading="lazy" width="150px" src="{{url('uploads/slider/' . $row->image)}}"> </td>
                         <td>{{$row->title}}</td>
                          <td> 
-                            <a data-id="{{$row->id}}" class="edit" href="javascript:void(0)" data-toggle="modal" data-target="#myModal"> <i class="fa fa-edit"> </i> </a>
-                            <a data-id="{{$row->id}}" class="delete" href="javascript:void(0)" > <i class="fa fa-trash-o "> </i> </a> 
+                            <a data-id="{{$row->id}}" class="edit btn btn-primary" href="javascript:void(0)" data-toggle="modal" data-target="#myModal"> <i class="fa fa-edit"> </i> </a>
+                            <a data-id="{{$row->id}}" class="delete ml-2 btn btn-danger" href="javascript:void(0)" > <i class="fa fa-trash-o "> </i> </a> 
                         </td>
                     </tr>
                 <?php } 

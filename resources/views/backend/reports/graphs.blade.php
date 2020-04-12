@@ -2,53 +2,57 @@
 
 @section('content')
 <?php $currency =  setting_by_key("currency"); 
-$Days = array("Domingo","Lunes","Martes","Miércoles",
-                  "Jueves","Viernes","Sábado");
-$Months =array(1=>"Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio",
-             "Agosto","Septiembre","Octubre","Noviembre","Diciembre");
-
-
+$Days = array("Sunday","Monday","Tuesday","Wednesday",
+                  "Thursday","Friday","Saturday");
+$Months =array(1=>"January","February","March","April","May","June","July",
+             "August","September","October","November","December");
 
 ?>
 
 <div class="wrapper wrapper-content animated fadeInRight">
-            <div class="row">
-			 <div class="col-lg-12 col-md-12">
-                <div class="ibox float-e-margins">
-                    <div class="ibox-title">
-                       
-                    </div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
 
-            <div class="panel panel-white">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="visitors-chart">
-                            <div class="panel-heading pink text-right">
-                                <a class="graph_by" data-id="7">@lang('dashboard.7_days')</a> &nbsp; | &nbsp; 
-                                 <a class="graph_by" data-id="30">@lang('dashboard.30_days')</a>  &nbsp;| &nbsp;
-                                <a class="graph_by" data-id="365">@lang('dashboard.12_month')</a>
-                               
-                            </div>
-                            <div class="panel-body">
-                                <div id="flotchart1" style="display: block; width: 100%; max-width: 1100px; height: 415px; margin: 0 auto"></div>
-                                <div id="flotchart2" style="display: none; width: 100%; max-width: 1100px; height: 415px; margin: 0 auto"></div>
-                                <div id="flotchart3" style="display: none; width: 100%; max-width: 1100px; height: 415px; margin: 0 auto"></div>
+                </div>
+
+                <div class="panel panel-white">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="visitors-chart">
+                                <div class="panel-heading pink text-right">
+                                    <a class="graph_by" data-id="7">@lang('dashboard.7_days')</a> &nbsp; | &nbsp;
+                                    <a class="graph_by" data-id="30">@lang('dashboard.30_days')</a> &nbsp;| &nbsp;
+                                    <a class="graph_by" data-id="365">@lang('dashboard.12_month')</a>
+
+                                </div>
+                                <div class="panel-body">
+                                    <div id="flotchart1"
+                                        style="display: block; width: 100%; max-width: 1100px; height: 415px; margin: 0 auto">
+                                    </div>
+                                    <div id="flotchart2"
+                                        style="display: none; width: 100%; max-width: 1100px; height: 415px; margin: 0 auto">
+                                    </div>
+                                    <div id="flotchart3"
+                                        style="display: none; width: 100%; max-width: 1100px; height: 415px; margin: 0 auto">
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        </div>
-        </div>
-		
-		
-		<script src="//code.highcharts.com/highcharts.js"></script>
-	<script src="//code.highcharts.com/modules/exporting.js"></script>
+    </div>
 
-		
-		<script> 
-		// $(function() {
+
+    <script src="//code.highcharts.com/highcharts.js"></script>
+    <script src="//code.highcharts.com/modules/exporting.js"></script>
+
+
+    <script>
+        // $(function() {
    // var barOptions = {
         // series: {
             // lines: {
@@ -134,12 +138,12 @@ $Months =array(1=>"Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio",
 
 // });
 
-</script>
+    </script>
 
-<?php if(count($get_orders_365) > 0) { ?>
+    <?php if(count($get_orders_365) > 0) { ?>
 
-<script type="text/javascript">
-    $('.graph_by').on('click', function () {
+    <script type="text/javascript">
+        $('.graph_by').on('click', function () {
         var id = $(this).attr("data-id");
         if (id == 7) {
             $('#flotchart1').show();
@@ -422,9 +426,9 @@ echo '"' . $Days[date('w', strtotime(' -6 day'))] . '", ';
                 }]
             });
     });
-</script>
+    </script>
 
-		<?php } ?>
-		
-		
-@endsection
+    <?php } ?>
+
+
+    @endsection

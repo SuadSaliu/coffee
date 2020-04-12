@@ -7,6 +7,7 @@ return array (
   'options' => 'Options',
   'add' => 'Add',
   'add_new' => 'Add New',
+  'update' => 'Update',
   'edit' => 'Edit',
   'save' => 'Save',
   'search' => 'Search',

@@ -7,7 +7,7 @@
             <div class="row">
                 <!-- Start: Speak-left -->
                 <div class="subscribe-left">
-                    <img src="assets/frontend/img/news-ltr-img.png" alt="">
+                    <img loading="lazy" src="assets/frontend/img/news-ltr-img.png" alt="">
                 </div>
                 <!-- End: Speak-left -->
                 
@@ -126,19 +126,33 @@
 		};
 		
 		$.ajax({
-								type: 'POST',
-								headers: {
-									'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-								},
-								url: '<?php echo url("newsletter/store"); ?>',
-								data: form_data,
-								success: function (msg) {
-									if(msg == "already") { 
-										swal("Great" , "You are already Subscribed" , "info");
-										return false;
-									}
-									swal("Great" , msg , "success");
-								}	
-							});
-	});
+            type: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            url: '<?php echo url("newsletter/store"); ?>',
+            data: form_data,
+            success: function (msg) {
+                if(msg == "already") { 
+                    swal("Great" , "You are already Subscribed" , "info");
+                    return false;
+                }
+                swal("Great" , msg , "success");
+            }	
+        });
+    });
+    
+    (async () => {
+        if ('loading' in HTMLImageElement.prototype) {
+            const images = document.querySelectorAll("img.lazyload");
+            images.forEach(img => {
+                img.src = img.dataset.src;
+            });
+        } else {
+            // Dynamically import the LazySizes library
+            const lazySizesLib = await import('https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.2.0/lazysizes.min.js');
+            // Initiate LazySizes (reads data-src & class=lazyload)
+            lazySizes.init(); // lazySizes works off a global.
+        }
+    })();
 	</script>

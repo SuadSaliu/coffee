@@ -50,8 +50,7 @@
                          <td>{{$row->display_name}}</td>
                          <td>{{$row->description}}</td>
                          <td> 
-                            <a class="edit" href="{{url('roles/edit/' . $row->id)}}"> <i class="fa fa-edit"> </i> </a>
-                            
+                            <a class="edit btn btn-primary" href="{{url('roles/edit/' . $row->id)}}"> <i class="fa fa-edit"> </i> </a>                            
                         </td>
                     </tr>
                 <?php } 

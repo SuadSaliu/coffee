@@ -58,8 +58,8 @@
                          <td>{{$currency}}{{$row->price}}</td>
                          <td>{{$row->description}}</td>
                          <td> 
-                            <a data-id="{{$row->id}}" class="edit" href="javascript:void(0)" data-toggle="modal" data-target="#myModal"> <i class="fa fa-edit"> </i> </a>
-                            <a data-id="{{$row->id}}" class="delete" href="javascript:void(0)" > <i class="fa fa-trash-o "> </i> </a> 
+                            <a data-id="{{$row->id}}" class="edit btn btn-primary" href="javascript:void(0)" data-toggle="modal" data-target="#myModal"> <i class="fa fa-edit"> </i> </a>
+                            <a data-id="{{$row->id}}" class="delete ml-2 btn btn-danger" href="javascript:void(0)" > <i class="fa fa-trash-o "> </i> </a> 
                         </td>
                     </tr>
                 <?php } 

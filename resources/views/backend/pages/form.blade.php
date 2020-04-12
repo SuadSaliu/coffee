@@ -76,7 +76,7 @@
                                 
                                <div class="form-group"><label class="col-sm-2 control-label">Image</label>
                                     <div class="col-sm-10"><input type="file" name="file" accept=".png, .jpg, .jpeg"  ></div>
-                                    <img src="<?php echo url("assets/images/uploads/1/" . $page->image); ?>" width="100px"> 
+                                    <img loading="lazy" src="<?php echo url("assets/images/uploads/1/" . $page->image); ?>" width="100px"> 
                                 </div>
                                 <div class="hr-line-dashed"></div>
                                 

@@ -5,7 +5,7 @@
             <div class="row">
                 <!-- Start: Logo Area -->
                 <div class="logo-sec">
-                    <a class="logo" href="{{url("/")}}"><img src="assets/frontend/img/logo.png" alt=""></a>
+                    <a class="logo" href="{{url("/")}}"><img loading="lazy" src="assets/frontend/img/logo.png" alt=""></a>
                     <a class="togg-navi"><span class="togg-text-menu"><i class="fa fa-bars"></i></span></a>
                 </div>
                 <!-- End: Logo Area -->

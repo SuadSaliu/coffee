@@ -128,7 +128,7 @@
                 <label title="Upload image file" for="inputImage" class="">
 
                     <div class="upload-pic img-circle" style="">
-                        <img id="image_source"
+                        <img loading="lazy" id="image_source"
                             src="<?php echo url("uploads/products/thumb/" . $product->id . ".jpg?rand=".rand(0,100)); ?>">
                     </div>
                     <div class="upload-pic-new btn btn-primary text-center">

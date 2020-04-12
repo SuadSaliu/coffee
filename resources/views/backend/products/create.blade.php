@@ -106,7 +106,7 @@
                 <label title="Upload image file" for="inputImage" class="">
 
                     <div class="upload-pic img-circle" style="">
-                        <img id="image_source" class="img-circle" src="" alt="">
+                        <img loading="lazy" id="image_source" class="img-circle" src="" alt="">
 
                     </div>
                     <div class="upload-pic-new btn btn-primary text-center">

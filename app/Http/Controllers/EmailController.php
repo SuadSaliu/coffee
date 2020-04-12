@@ -9,6 +9,8 @@ use Mail;
 use App\User;
 use Response;
 use PDF;
+use Config;
+
 class EmailController extends Controller
 {
 	public function index() {
@@ -73,7 +75,7 @@ class EmailController extends Controller
 				"sales" => $sales,
 				"file" => $filename,
 			);
-		Mail::to("arfan67@gmail.com")->send(new ReportsEmail($content));
+		Mail::to(Config::get('constants.mail_email'))->send(new ReportsEmail($content));
 	}
 	
 	
@@ -134,7 +136,7 @@ class EmailController extends Controller
 				"sales" => $sales,
 				"file" => $filename,
 			);
-		Mail::to("arfan67@gmail.com")->send(new ReportsEmail($content));
+		Mail::to(Config::get('constants.mail_email'))->send(new ReportsEmail($content));
 	}
 	
 	

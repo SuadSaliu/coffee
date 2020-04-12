@@ -52,7 +52,7 @@
 				@if(file_exists('uploads/pages/' . $page->image))  
                     <!-- Start: Our Story-left -->
                     <div class="col-md-6 abut-story-left">
-                        <img src="{{url('uploads/pages/' . $page->image)}}" alt="">
+                        <img loading="lazy" src="{{url('uploads/pages/' . $page->image)}}" alt="">
                     </div>
                     <!-- End: Our Story-left -->
 				@endif

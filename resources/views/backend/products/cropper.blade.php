@@ -179,7 +179,7 @@ $(document).on("change","#cropper",function() {
       <div class="modal-body">
         <div>
           <div width="100%" style="text-align:center" id="image_loader"> </div>
-          <img width="100%" src="" id="image_cropper">
+          <img loading="lazy" width="100%" src="" id="image_cropper">
           <br>
           <p class="text-center">
             <button type="button" class="btn btn-primary rotate" data-method="rotate" data-option="-30"><i

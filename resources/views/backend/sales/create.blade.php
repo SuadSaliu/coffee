@@ -190,10 +190,10 @@
 					<div class="col-xs-12 col-sm-4 col-md-6 col-lg-3 {{$product->category_id}} all">
 						<div class="widget white-bg text-center product_list h-100">
 							@if(file_exists('uploads/products/' . $product->id . '.jpg'))
-							<img width="100px" alt="image" class="img-circle"
+							<img loading="lazy" width="100px" alt="image" class="img-circle"
 								src="{{url('uploads/products/thumb/' . $product->id . '.jpg')}}">
 							<h2 class="m-xs heading-size_image">{{$product->name}}</h2> @else
-							<img width="100px" alt="image" class="img-circle" src="{{url('herbs/noimage.jpg')}}">
+							<img loading="lazy" width="100px" alt="image" class="img-circle" src="{{url('herbs/noimage.jpg')}}">
 							<h2 style="padding-left:5px; text-align:left" class="m-xs heading-size_image">
 								{{$product->name}}</h2> @endif
 							<?php $prices = json_decode($product->prices); $titles = json_decode($product->titles);?>

@@ -9,7 +9,7 @@
             <div class="row">
                 <!-- Start: Our Story-left -->
                 <div class="col-md-6 story-left">
-                    <img src="assets/frontend/img/about-01.jpg" alt="">
+                    <img loading="lazy" src="assets/frontend/img/about-01.jpg" alt="">
                 </div>
                 <!-- End: Our Story-left -->
                 
@@ -76,7 +76,7 @@
                         <a href="{{url('our-menu')}}" class="menu-items col-md-3">
                             <div class="overlay-outr">
                                 <figure class="img-hme">
-                                <img src="{{asset('uploads/category/thumb/' . $cat->id . '.jpg')}}" alt="">
+                                <img loading="lazy" src="{{asset('uploads/category/thumb/' . $cat->id . '.jpg')}}" alt="">
                                 </figure>
                                 <span class="overlay-sec"></span>                            </div>
                             <div class="text-outr">
@@ -124,7 +124,7 @@
             <div class="row">
                 <!-- Start: Our Story-left -->
                 <div class="col-md-6 story-left">
-                    <img src="assets/frontend/img/flwr-img.png" alt="">
+                    <img loading="lazy" src="assets/frontend/img/flwr-img.png" alt="">
                 </div>
                 <!-- End: Our Story-left -->
                 
