@@ -17,8 +17,8 @@ class ProductController extends Controller
         $catQuery = $request->query('category');
 
         $products = !$catQuery ?
-            Product::orderBy('created_at', 'desc')->paginate(8) :
-            Product::where('category_id', $catQuery)->orderBy('created_at', 'desc')->paginate(8);
+            Product::orderBy('name', 'asc')->paginate(8) :
+            Product::where('category_id', $catQuery)->orderBy('name', 'asc')->paginate(8);
 
         return Response::json($products, 200);
      }
@@ -28,7 +28,7 @@ class ProductController extends Controller
      */
      public function categories()
     {
-        $categories = Categories::all(['id', 'name']);
+        $categories = Categories::all(['id', 'name'])->where("is_delete" , 0)->orderBy("name" , "ASC");
 
         return Response::json($categories, 200);
     }

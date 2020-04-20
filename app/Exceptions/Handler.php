@@ -91,6 +91,8 @@ class Handler extends ExceptionHandler
 
         $response = [];
 
+        
+
         switch ($statusCode) {
             case 401:
                 $response['message'] = 'Unauthorized';

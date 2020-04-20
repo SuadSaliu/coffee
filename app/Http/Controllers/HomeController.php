@@ -75,9 +75,6 @@ class HomeController extends Controller
     public function ourMenu() 
     {
         $categories = Category::get();
-        foreach ($categories as $cat) {
-            $cat->products = Product::where("category_id", $cat->id)->where("is_delete" , 0)->orderBy("name" , "ASC")->get();
-        }
         return view('pages.menu', compact('categories'));
     }
 

@@ -68,11 +68,11 @@
             <div class="our-menu-details">
 
                 <div class="col-xs-12 col-sm-2 col-lg-2 bg-grey menu-list no-pad">
-                    <h5>Categories</h5>
+                    <h5 class="mb-0">Categories</h5>
                     <ul class="">
-                        <li class="fil-cat" data-rel="all">All</li>
+                        <li class="fil-cat active" data-rel="all">All</li>
                         @foreach($categories as $cat)
-                        <li style="cursor:pointer;" class="fil-cat" data-rel="{{$cat->id}}">{{$cat->name}}</li>
+                            <li style="cursor:pointer;" class="fil-cat" data-rel="{{$cat->id}}">{{$cat->name}}</li>
                         @endforeach
 
                     </ul>
@@ -80,48 +80,8 @@
                 </div>
 
                 <!-- Start: Our-menu-one -->
-                <div class="col-xs-12 col-sm-7 col-lg-7 " id="portfolio">
-                    @foreach($categories as $cat)
-                    @foreach($cat->products as $pro)
+                <div class="col-xs-12 col-sm-7 col-lg-7 " id="portfolio"></div>
 
-                    <div class="clearfix {{$pro->category_id}} all marginBtn">
-                        <div class="col-sm-2"><img loading="lazy" class="img-circle" width="100"
-                                src="{{url('uploads/products/thumb/' . $pro->id . '.jpg')}}" class="img-responsive">
-                        </div>
-                        <!-- Start: Our-menu-lft -->
-
-                        <div class="or-lft-menu col-sm-7">
-                            <h5><span>{{$pro->name}}</span></h5>
-                            <p class="hidden-xs">{{$pro->description}}</p>
-                        </div>
-
-                        <!-- End: Our-menu-lft -->
-                        <!-- Start: Our-menu-rgt -->
-                        <?php 
-                            $prices = json_decode($pro->prices); 
-                            $titles = json_decode($pro->titles); 
-                        ?>
-                        @foreach($titles as $key=>$t)
-
-                        <div class="or-rgt-menu col-xs-12 col-sm-3">
-                            <h1>{{$t }} <strong class="pull-right"><?php echo $currency; ?>{{$prices[$key]}}</strong>
-                            </h1>
-                            <h2 style="cursor:pointer;" class="AddToCart" data-price="{{$prices[$key]}}"
-                                data-id="{{$pro->id}}" data-key="{{$key}}" data-size="{{$t}}"
-                                data-name="{{$pro->name}}">+</h2>
-                        </div>
-
-                        @endforeach
-
-
-                        <!-- End: Our-menu-rgt -->
-                    </div>
-                    <!-- End:  -->
-                    @endforeach
-                    @endforeach
-
-
-                </div>
                 <div class="col-xs-12 col-sm-3 col-lg-3 bg-grey menu-list no-pad">
                     <h5>Your Order <i class="fa fa-shopping-cart white pull-right"></i></h5>
                     <ul id="CartHTML">
@@ -247,27 +207,178 @@
         </div>
     </div>
 </div>
-<script type="text/javascript">
-    $("#card_form").hide(100);
-			$("body").on("click" , ".payment_option" , function() {
-				if($(this).val() == "card") { 
-					$("#card_form").show(100);
-					$("#payment_type").val("card");
-				} else { 
-					$("#card_form").hide(100);
-					$("#payment_type").val("cash");
-				}
-			});
-</script>
-
-
-
 
 <link href="{{url('assets/css/plugins/sweetalert/sweetalert.css')}}" rel="stylesheet">
 <script src="{{url('assets/js/plugins/sweetalert/sweetalert.min.js')}}"></script>
 <script src="{{url('assets/js/lodash.min.js')}}"></script>
 
-<script>
+<style>
+    .ml-2 {
+        margin-left: 10px;
+    }
+
+    .prevPage,
+    .nextPage {
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .prevPage.disabled,
+    .nextPage.disabled {
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .mb-0 {
+        margin-bottom: 0 !important;
+    }
+
+    .fil-cat.active {
+       background: rgba(89, 89, 89, 0.9)
+    }
+
+    .no_products {
+        text-align: center;
+        margin-top: 2em;
+    }
+</style>
+
+<script type="text/javascript">
+
+const currency = "<?php echo $currency;?>";
+
+let current_page = 1;
+let last_page = 1;
+let category = null; 
+
+let getProductHtml = function(product) {
+    
+    const titles = JSON.parse(product.titles);
+    const prices = JSON.parse(product.prices);
+
+    let priceHtml = '';
+
+    titles.forEach((t, key) => {
+        const price = prices[key] || '';
+        const title = t || '';
+        priceHtml += `<div class="or-rgt-menu col-xs-12 col-sm-3">
+                        <h1>${title} <strong class="pull-right">${currency} ${price}</strong></h1>
+                        <h2 style="cursor:pointer;" class="AddToCart" data-price="${price}"
+                            data-id="${product.id}" data-key="${key}" data-size="${title}"
+                            data-name="${product.name}">+</h2>
+                    </div>`;
+    });
+
+    return `<div class="clearfix ${product.category_id} all marginBtn">
+                <div class="col-sm-2"><img loading="lazy" class="img-circle" width="100"
+                        src="uploads/products/thumb/${product.id}.jpg" class="img-responsive">
+                </div>
+
+                <div class="or-lft-menu col-sm-7">
+                    <h5><span>${product.name}</span></h5>
+                    <p class="hidden-xs">${product.description}</p>
+                </div>
+
+                ${priceHtml}
+                
+            </div>`;
+}
+
+let showProducts = function(products) {
+    const emtpyHtml = '<div class="no_products">There are no products.</div>';
+    try {
+        if (!products || !products.data || products.data.length === 0) {
+            $("#portfolio").html(emtpyHtml);
+            return;    
+        }
+
+        last_page = products.last_page;
+
+        let productHtmlCollection = '';
+        products.data.forEach(p =>
+            productHtmlCollection += getProductHtml(p)
+        );
+
+        const pagHtml = `<nav aria-label="pagination">
+            <ul class="pager">
+                <li><a class="prevPage ${current_page === 1 ? 'disabled' : ''}"><i class="fa fa-chevron-left" aria-hidden="true"></i> Previous</a></li>
+                <li class="ml-2"><a class="nextPage ${current_page === last_page ? 'disabled' : ''}">Next <i class="fa fa-chevron-right" aria-hidden="true"></i></a></li>
+            </ul>
+        </nav>`;
+
+        productHtmlCollection += pagHtml;
+
+        $("#portfolio").html(productHtmlCollection); 
+    } catch (error) {
+        $("#portfolio").html(emtpyHtml);      
+    }
+}
+
+let getProducts = function() {
+    let url = `api/products?page=${current_page}`;
+
+    if (category) {
+        url += `&category=${category}`;
+    }
+
+    $.ajax({
+        type: 'GET',
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        url: url,
+        success: showProducts
+    });
+}
+
+// ------------------------------------
+const onShowProduct = function() {
+    $("#portfolio").fadeTo(100, 0.1);  // Animate
+    getProducts();
+    setTimeout(function () { $("#portfolio").fadeTo(300, 1); }, 700);
+}
+
+$( document ).ready(function() {
+    onShowProduct();
+
+    $(".fil-cat").on("click", function() {
+        $(".fil-cat.active").removeClass('active');
+        $(this).addClass('active');
+        const catValue = $(this).attr("data-rel");
+        category = catValue === 'all' ? null : catValue; 
+        onShowProduct();
+    });
+
+    $("body").delegate(".prevPage", "click", function() {
+        if (current_page <= 1) {
+            return;
+        }
+        current_page--;
+        onShowProduct();
+    });
+
+    $("body").delegate(".nextPage", "click", function() {
+        if (current_page >= last_page) {
+            return;
+        }
+        current_page++;
+        onShowProduct();
+    });
+});
+
+    
+
+    $("#card_form").hide(100);
+    $("body").on("click" , ".payment_option" , function() {
+        if($(this).val() == "card") { 
+            $("#card_form").show(100);
+            $("#payment_type").val("card");
+        } else { 
+            $("#card_form").hide(100);
+            $("#payment_type").val("cash");
+        }
+    });
+
     $("body").on("click" , ".ConfirmOrder" , function() {
         var msg = "";
         
@@ -328,115 +439,109 @@
         
         $(".ConfirmOrder").html('<i class="fa fa-spinner fa-spin" style="font-size:18px"></i>');
         $.ajax({
-                        type: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        url: '<?php echo url("sales/online_order"); ?>',
-                        data: form_data,
-                        success: function (msg) {
-							var obj = $.parseJSON(msg);
-							 if(obj['error'] == 1) {
-								swal(
-								  'Oops...', obj['message'], 'error'
-								)
-								$("#payment_message").html(obj['message']);
-								return false;
-							 }
-							 
-                            $("#myModal").modal("hide");
-                            cart = [];
-                            $("#comments").val("");
-                            $(".ConfirmOrder").html('Order Confirm');
-                            swal({
-								  title: '',
-								  type: 'success',
-								  text: obj['message']
-                            })
-							    $("#name").val("");
-								$("#email").val("");
-								$("#phone").val("");
-								$("#address").val("");
-								$("#comment").val("");
-        
-                            show_cart();
-                        }    
-                    });    
+            type: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            url: '<?php echo url("sales/online_order"); ?>',
+            data: form_data,
+            success: function (msg) {
+                var obj = $.parseJSON(msg);
+                    if(obj['error'] == 1) {
+                    swal(
+                        'Oops...', obj['message'], 'error'
+                    )
+                    $("#payment_message").html(obj['message']);
+                    return false;
+                    }
+                    
+                $("#myModal").modal("hide");
+                cart = [];
+                $("#comments").val("");
+                $(".ConfirmOrder").html('Order Confirm');
+                swal({
+                        title: '',
+                        type: 'success',
+                        text: obj['message']
+                })
+                    $("#name").val("");
+                    $("#email").val("");
+                    $("#phone").val("");
+                    $("#address").val("");
+                    $("#comment").val("");
 
-      
-                
+                show_cart();
+            }    
+        });
                 
     });
 
     var products = new Array();
-var cart = new Array();
-$("body").on("click" , ".AddToCart" , function() {
-            var ids = _.map(cart, 'id');
-                var item = {
-                    id : $(this).attr("data-id") + $(this).attr("data-key"),
-                    product_id : $(this).attr("data-id"),
-                    price : $(this).attr("data-price"),
-                    size : $(this).attr("data-size"),
-                    name : $(this).attr("data-name")
-                };
-                console.log(item);
-                
-            if (!_.includes(ids, item.id)) {
-                item.quantity = 1;
-                item.p_qty = 1;
-                cart.push(item);
-            } else {
-                var index = _.findIndex(cart, item);
-                 cart[index].quantity = cart[index].quantity + 1
-            }
+    var cart = new Array();
+    $("body").on("click" , ".AddToCart" , function() {
+        var ids = _.map(cart, 'id');
+        var item = {
+            id : $(this).attr("data-id") + $(this).attr("data-key"),
+            product_id : $(this).attr("data-id"),
+            price : $(this).attr("data-price"),
+            size : $(this).attr("data-size"),
+            name : $(this).attr("data-name")
+        };
             
+        if (!_.includes(ids, item.id)) {
+            item.quantity = 1;
+            item.p_qty = 1;
+            cart.push(item);
+        } else {
+            var index = _.findIndex(cart, item);
+                cart[index].quantity = cart[index].quantity + 1
+        }
+        
 
-        //toastr.success('Successfully Added to Cart')            
-        show_cart();    
+    //toastr.success('Successfully Added to Cart')            
+    show_cart();    
             
     
-});
+    });
 
 
 $("body").on("click" , "#ClearCart" , function() {
-    
     var cart = [];
     $(".TotalAmount").html(0);
-            $("#CartHTML").html("");
+    $("#CartHTML").html("");
 });
+
 $("body").on("click" , ".DecreaseToCart" , function() {
-                var item = {
-                    id : $(this).attr("data-id")
-                };
-            var index = _.findIndex(cart, item);
-            
-            if (cart[index].quantity == 1) {
-                deleteItemFromCart(item);
-            } else {
-                cart[index].quantity = cart[index].quantity - 1;
-            }    
-            //console.log(cart[index].quantity);
-         //toastr.success('Successfully Updated')       
-        show_cart();            
-    
+    var item = {
+        id : $(this).attr("data-id")
+    };
+    var index = _.findIndex(cart, item);
+
+    if (cart[index].quantity == 1) {
+        deleteItemFromCart(item);
+    } else {
+        cart[index].quantity = cart[index].quantity - 1;
+    }    
+    //console.log(cart[index].quantity);
+    //toastr.success('Successfully Updated')       
+    show_cart();            
 });
 
 $("body").on("click" , ".IncreaseToCart" , function() {	
-                var item = {
-                    id : $(this).attr("data-id")
-                };
-            var index = _.findIndex(cart, item);
-            cart[index].quantity = cart[index].quantity + 1;        
-            show_cart();            
-    
+    var item = {
+        id : $(this).attr("data-id")
+    };
+    var index = _.findIndex(cart, item);
+    cart[index].quantity = cart[index].quantity + 1;        
+    show_cart();            
 });
 
 $("body").on("click" , ".DeleteItem" , function() {
-                var item = {
-                    id : $(this).attr("data-id")
-                };    
-                
-            deleteItemFromCart(item);
+    var item = {
+        id : $(this).attr("data-id")
+    };    
+
+    deleteItemFromCart(item);
 });
 
 $("body").on("click" , ".DiscountItem" , function() {
@@ -468,14 +573,13 @@ function deleteItemFromCart(item) {
                      
                  });
                  
-                  cart_html += '<li class="list-pad">Subtotal &ensp;<span class="pull-right TotalAmount">'+ total +'</li>';
+                  cart_html += '<li class="list-pad">Subtotal &ensp;<span class="pull-right TotalAmount"><?php echo $currency; ?> '+ total +'</li>';
                         cart_html += '<li>Delivery Fee &ensp;<span class="pull-right"><?php echo $currency; ?><?php echo setting_by_key("delivery_cost"); ?></li>';
                         var vat = (Number(total) * <?php echo setting_by_key("vat"); ?>)/100;
                         cart_html += '<li>+ VAT (<?php echo setting_by_key("vat"); ?>%) &ensp;<span class="pull-right"><?php echo $currency; ?>' + vat + '</li>';
                         var total_cost = Number(total) + <?php echo setting_by_key("delivery_cost"); ?> +  vat;
                         cart_html += '<li class="list-pad">Total &ensp;<span class="pull-right bigTotal"><?php echo $currency; ?>'+ total_cost +'</li>';
                         
-                    
                  $("#vat").val(vat);
 				 
                  // cart_html += '<div class="panel-footer"> Total Items' ;
@@ -489,22 +593,12 @@ function deleteItemFromCart(item) {
         } else { 
             $(".TotalAmount").html(0);
             $("#CartHTML").html("");
+
+            var empty_card = '<li class="list-pad">VAT(<?php echo setting_by_key("vat"); ?>%) &ensp;<span class="pull-right">0.00</li><li class="list-pad">Delivery Fee &ensp;<span class="pull-right">0.00</li>'
+            $("#CartHTML").html(empty_card);
         }
         
 }
-$(function() {
-    var selectedClass = "";
-    $(".fil-cat").click(function(){ 
-        selectedClass = $(this).attr("data-rel"); 
-    $("#portfolio").fadeTo(100, 0.1);
-        $("#portfolio > div").not("."+selectedClass).fadeOut().removeClass('scale-anm');
-    setTimeout(function() {
-      $("."+selectedClass).fadeIn().addClass('scale-anm');
-      $("#portfolio").fadeTo(300, 1);
-    }, 300); 
-        
-    });
-});
 </script>
 
 
