@@ -90,7 +90,7 @@
                         <li class="list-pad">Delivery Fee &ensp;<span class="pull-right">0.00</li>
                     </ul>
 
-                    <a type="submit" data-toggle="modal" data-target="#myModal"
+                    <a type="submit" id="modalBtn"
                         class="btn addTo-cart btn-group-justified" value="">Checkout</a>
                 </div>
             </div>
@@ -364,6 +364,14 @@ $( document ).ready(function() {
         current_page++;
         onShowProduct();
     });
+
+    $("#modalBtn").on("click", function() {
+        if ($('#CartHTML li').length < 3) {
+            return;
+        }
+        $("#myModal").modal("show");
+    });
+    
 });
 
     
