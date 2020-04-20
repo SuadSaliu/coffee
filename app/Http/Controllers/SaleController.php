@@ -25,11 +25,7 @@ class SaleController extends Controller
 
         }
 
-
-
-
         if (Auth::user()->role_id == 1) {
-
             if (!empty($ids)) {
                 $sales = Sale::select("*", "sales.id as id")->leftJoin("sale_items as s", "s.sale_id", '=', "sales.id")->whereIn("cashier_id", $ids)->groupBy("sales.id")->orderBy("sales.id", "DESC")->paginate(25);
             } else {

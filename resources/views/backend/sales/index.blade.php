@@ -47,7 +47,7 @@ $currency =  setting_by_key("currency");
 								
 								
                                 <td>
-								<a href="{{ url('sales/cancel/' . $sale->id) }}" class="btn btn-danger btn-xs pull-right">Cancel It</a>
+								<a href="{{ url('sales/cancel/' . $sale->id) }}" class="btn btn-danger btn-xs ml-2 pull-right">Cancel It</a>
                                     <a target="_blank" href="{{ url('sales/receipt/' . $sale->id) }}" class="btn btn-primary btn-xs pull-right">@lang('common.show')</a>
                                 </td>
                             </tr>

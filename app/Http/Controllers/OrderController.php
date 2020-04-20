@@ -88,7 +88,6 @@ class OrderController extends Controller
             );
         }
 		
-		
 		if($request->input("payment_with") == "card") { 
 			$cc_number = $request->input("cc_number");
 			$cc_month = $request->input("cc_month");
@@ -96,62 +95,63 @@ class OrderController extends Controller
 			$cc_code = $request->input("cc_code");
 			$amount = $request->input("total_cost");
 			$amount *= 100;
-			\Stripe\Stripe::setApiKey(env("STRIPE_SECRET"));
+            \Stripe\Stripe::setApiKey(env("STRIPE_SECRET"));
+
 			try {
-                    $token = \Stripe\Token::create(
-                        array(
+                $token = \Stripe\Token::create(
+                    array(
                         "card" => array(
                         "number" => $cc_number,
                         "exp_month" => $cc_month,
                         "exp_year" => $cc_year,
                         "cvc" => $cc_code
-                        )
-                        )
-                    );
-                } catch (\Stripe\Error\Card $e) {
-                    $token = $e->getJsonBody();
-                    $errors = array(
+                    )
+                )
+                );
+            } catch (\Stripe\Error\Card $e) {
+                $token = $e->getJsonBody();
+                $errors = array(
                     "error" => 1,
                     "message" => $token['error']['message']
-                    );
-
-                    echo  json_encode($errors);exit;
-                }
-
-                // Get the payment token submitted by the form:
-                $stripeToken = $token['id'];
-
-                // Create a Customer:
-                $customer = \Stripe\Customer::create(
-                    array(
-                    "email" => Auth::user()->email,
-                    "source" => $token,
-                    )
                 );
 
-                // Charge the Customer instead of the card:
-                $charge = \Stripe\Charge::create(
-                    array(
+                echo  json_encode($errors);exit;
+            }
+
+            // Get the payment token submitted by the form:
+            $stripeToken = $token['id'];
+
+            // Create a Customer:
+            $customer = \Stripe\Customer::create(
+                array(
+                    "email" => Auth::user()->email,
+                    "source" => $token,
+                )
+            );
+
+            // Charge the Customer instead of the card:
+            $charge = \Stripe\Charge::create(
+                array(
                     "amount" => round($amount),
                     "currency" => "USD",
                     "customer" => $customer->id
-                    )
-                );
+                )
+            );
 		}
 		
-			unset($form["cc_number"]);
-			unset($form["cc_month"]);
-			unset($form["cc_year"]);
-			unset($form["cc_code"]);
-			unset($form["total_cost"]);
-			
-			$sale = Sale::createAll($form);
+        unset($form["cc_number"]);
+        unset($form["cc_month"]);
+        unset($form["cc_year"]);
+        unset($form["cc_code"]);
+        unset($form["total_cost"]);
+        
+        $sale = Sale::createAll($form);
 
-				$errors = array(
-                    "error" => 0,
-                    "message" => "Thank you for your Order. We will contact you soon."
-                    );
-				echo  json_encode($errors);exit;
+        $errors = array(
+            "error" => 0,
+            "message" => "Thank you for your Order. We will contact you soon."
+        );
+        echo  json_encode($errors);exit;
     }
 	
 

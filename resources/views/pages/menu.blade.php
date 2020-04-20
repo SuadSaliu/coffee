@@ -391,9 +391,10 @@ $( document ).ready(function() {
         var msg = "";
         
         if(cart.length  < 1) {
-                swal("" , "Cart is Empty" , "error");
-                return false;
+            swal("Error" , "Cart is Empty" , "error");
+            return false;
         }
+        
         var name = $("#name").val();
         var email = $("#email").val();
         var phone = $("#phone").val();
@@ -455,16 +456,18 @@ $( document ).ready(function() {
             data: form_data,
             success: function (msg) {
                 var obj = $.parseJSON(msg);
-                    if(obj['error'] == 1) {
+                if(obj['error'] == 1) {
                     swal(
                         'Oops...', obj['message'], 'error'
                     )
-                    $("#payment_message").html(obj['message']);
+                $("#payment_message").html(obj['message']);
                     return false;
-                    }
+                }
                     
                 $("#myModal").modal("hide");
+               
                 cart = [];
+               
                 $("#comments").val("");
                 $(".ConfirmOrder").html('Order Confirm');
                 swal({
@@ -479,7 +482,13 @@ $( document ).ready(function() {
                     $("#comment").val("");
 
                 show_cart();
-            }    
+            },
+            error: function () {
+                swal(
+                    'Error!', 'An error occurred while checkout products, please try again', 'error'
+                )
+                $(".ConfirmOrder").html('Order Confirm');
+            }
         });
                 
     });
@@ -509,8 +518,7 @@ $( document ).ready(function() {
     //toastr.success('Successfully Added to Cart')            
     show_cart();    
             
-    
-    });
+});
 
 
 $("body").on("click" , "#ClearCart" , function() {
@@ -525,11 +533,10 @@ $("body").on("click" , ".DecreaseToCart" , function() {
     };
     var index = _.findIndex(cart, item);
 
-    if (cart[index].quantity == 1) {
-        deleteItemFromCart(item);
-    } else {
+    (cart[index].quantity == 1) ?
+        deleteItemFromCart(item) :
         cart[index].quantity = cart[index].quantity - 1;
-    }    
+
     //console.log(cart[index].quantity);
     //toastr.success('Successfully Updated')       
     show_cart();            
@@ -562,49 +569,47 @@ function deleteItemFromCart(item) {
     show_cart();
 }
 
+function show_cart() { 
+    if(cart.length > 0) { 
+    var qty = 0;
+    var total = 0;
+    var cart_html = "";
+        var obj = cart; 
+                
+            $.each( obj, function( key, value ) {
 
-    
-    function show_cart() { 
-         if(cart.length > 0) { 
-         var qty = 0;
-         var total = 0;
-         var cart_html = "";
-             var obj = cart; 
-                      
-                 $.each( obj, function( key, value ) {
+                    
+                cart_html += '<li><span style="cursor:pointer;"><i data-id=' +  value.id + ' class="fa fa-minus-circle DecreaseToCart" aria-hidden="true"></i>&ensp;<i data-id=' +  value.id + ' class="fa fa-plus-circle IncreaseToCart" aria-hidden="true"></i></span>&ensp;<span class="">' + value.quantity +'x</span> ' + value.name + '<span class="pull-right" style="cursor:pointer;">'+ value.price + ' <i class="fa fa-times-circle-o fa-lg DeleteItem" data-id=' +  value.id + '></i></span></li>';
 
-                          
-                      cart_html += '<li><span style="cursor:pointer;"><i data-id=' +  value.id + ' class="fa fa-minus-circle DecreaseToCart" aria-hidden="true"></i>&ensp;<i data-id=' +  value.id + ' class="fa fa-plus-circle IncreaseToCart" aria-hidden="true"></i></span>&ensp;<span class="">' + value.quantity +'x</span> ' + value.name + '<span class="pull-right" style="cursor:pointer;">'+ value.price + ' <i class="fa fa-times-circle-o fa-lg DeleteItem" data-id=' +  value.id + '></i></span></li>';
-
-                     qty = Number(value.quantity);
-                     total = Number(total) + Number(value.price * qty);
-                     
-                 });
-                 
-                  cart_html += '<li class="list-pad">Subtotal &ensp;<span class="pull-right TotalAmount"><?php echo $currency; ?> '+ total +'</li>';
-                        cart_html += '<li>Delivery Fee &ensp;<span class="pull-right"><?php echo $currency; ?><?php echo setting_by_key("delivery_cost"); ?></li>';
-                        var vat = (Number(total) * <?php echo setting_by_key("vat"); ?>)/100;
-                        cart_html += '<li>+ VAT (<?php echo setting_by_key("vat"); ?>%) &ensp;<span class="pull-right"><?php echo $currency; ?>' + vat + '</li>';
-                        var total_cost = Number(total) + <?php echo setting_by_key("delivery_cost"); ?> +  vat;
-                        cart_html += '<li class="list-pad">Total &ensp;<span class="pull-right bigTotal"><?php echo $currency; ?>'+ total_cost +'</li>';
-                        
-                 $("#vat").val(vat);
-				 
-                 // cart_html += '<div class="panel-footer"> Total Items' ;
-                 // cart_html += '<span class="pull-right"> ' + qty ;
-                 // cart_html += '</span></div>' ;
-                 
-                 
-                 $("#CartHTML").html("");
-                 $("#total_cost").val(total_cost);
-                 $("#CartHTML").html(cart_html);
-        } else { 
-            $(".TotalAmount").html(0);
+                qty = Number(value.quantity);
+                total = Number(total) + Number(value.price * qty);
+                
+            });
+            
+            cart_html += '<li class="list-pad">Subtotal &ensp;<span class="pull-right TotalAmount"><?php echo $currency; ?> '+ total +'</li>';
+                cart_html += '<li>Delivery Fee &ensp;<span class="pull-right"><?php echo $currency; ?><?php echo setting_by_key("delivery_cost"); ?></li>';
+                var vat = (Number(total) * <?php echo setting_by_key("vat"); ?>)/100;
+                cart_html += '<li>+ VAT (<?php echo setting_by_key("vat"); ?>%) &ensp;<span class="pull-right"><?php echo $currency; ?>' + vat + '</li>';
+                var total_cost = Number(total) + <?php echo setting_by_key("delivery_cost"); ?> +  vat;
+                cart_html += '<li class="list-pad">Total &ensp;<span class="pull-right bigTotal"><?php echo $currency; ?>'+ total_cost +'</li>';
+                
+            $("#vat").val(vat);
+            
+            // cart_html += '<div class="panel-footer"> Total Items' ;
+            // cart_html += '<span class="pull-right"> ' + qty ;
+            // cart_html += '</span></div>' ;
+            
+            
             $("#CartHTML").html("");
+            $("#total_cost").val(total_cost);
+            $("#CartHTML").html(cart_html);
+} else { 
+    $(".TotalAmount").html(0);
+    $("#CartHTML").html("");
 
-            var empty_card = '<li class="list-pad">VAT(<?php echo setting_by_key("vat"); ?>%) &ensp;<span class="pull-right">0.00</li><li class="list-pad">Delivery Fee &ensp;<span class="pull-right">0.00</li>'
-            $("#CartHTML").html(empty_card);
-        }
+    var empty_card = '<li class="list-pad">VAT(<?php echo setting_by_key("vat"); ?>%) &ensp;<span class="pull-right">0.00</li><li class="list-pad">Delivery Fee &ensp;<span class="pull-right">0.00</li>'
+    $("#CartHTML").html(empty_card);
+}
         
 }
 </script>

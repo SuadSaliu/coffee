@@ -93,6 +93,7 @@ break;
                         return new SaleItem($item);
                     }
                 );
+
                 $sales = self::create($input_form);
                 $sales->items()->saveMany($items);
 

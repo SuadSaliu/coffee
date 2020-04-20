@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 
 Route::get('products', 'api\ProductController@products');
 Route::get('categories', 'api\ProductController@categories');
+Route::post('order', 'api\ProductController@order');
 
 Route::group([
     'prefix' => 'auth'
