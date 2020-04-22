@@ -13,6 +13,7 @@
         "laravel/framework": "5.5.*",
         "laravel/passport": "4.0.3",
         "laravel/tinker": "~1.0",
+        "simplesoftwareio/simple-qrcode": "^2.0",
         "stripe/stripe-php": "^4.7",
         "zizaco/entrust": "dev-master"
     },

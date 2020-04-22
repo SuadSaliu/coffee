@@ -9,6 +9,7 @@ use Auth;
 use Validator;
 use DB;
 use App\User;
+use Config;
 
 class SaleController extends Controller
 {
@@ -65,8 +66,14 @@ class SaleController extends Controller
 
     public function receipt($id)
     {
+        $image = \QrCode::format('png')
+                    ->size(200)
+                    ->generate(Config::get('constants.qrCodeUrl'),
+                                public_path('images/qrcode' . $id . '.png'));
+
         $data = [
             'sale' => Sale::findOrFail($id),
+            'qr_path' => "qrcode". $id .".png"
         ];
 
         return view('backend.sales.receipt', $data);

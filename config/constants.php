@@ -17,5 +17,6 @@ return [
     'lng' => '42.003295',
     'lat' => '21.439138',
     'stripe' => 'yes',
-    'hide_frontend' => 'no'
+    'hide_frontend' => 'no',
+    'qrCodeUrl' => 'QR code example'
 ];

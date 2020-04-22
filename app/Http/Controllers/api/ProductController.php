@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Category;
 use App\Product;
 use Response;
+use Config;
 
 use App\Sale;
 use Validator;
@@ -84,12 +85,6 @@ class ProductController extends Controller
                         )
                     )
                 );
-
-
-                return Response::json([
-                    "error" => 0,
-                    "message" => "Thank you for your Order. We will contact you soon."
-                ], 200);
             } catch (\Stripe\Error\Card $e) {
                 $token = $e->getJsonBody();
                 $errors = array(
@@ -121,11 +116,35 @@ class ProductController extends Controller
 		}
                  
         $sale = Sale::createAll($form);
-                
+
         return Response::json([
             "error" => 0,
+            "sale_id" => $sale->id,
             "message" => "Thank you for your Order. We will contact you soon."
-        ], 200);
+        ], 201);
+    }
+
+    
+    /**
+     * Getting All Categories
+     */
+    public function receiptTicket($id) {
+        return Response::json(["error" => 1], 400);
+        try {
+            $image = \QrCode::format('png')
+                    ->size(200)
+                    ->generate(Config::get('constants.qrCodeUrl'),
+                                public_path('images/qrcode' . $id . '.png'));
+
+            $data = [
+                'sale' => Sale::findOrFail($id),
+                'qr_path' => "images/qrcode". $id .".png"
+            ];
+
+            return Response::json($data, 200);
+        } catch (\Throwable $th) {
+            return Response::json(["error" => 1], 400);
+        }
     }
 
 }
