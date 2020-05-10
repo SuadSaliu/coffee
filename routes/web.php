@@ -106,6 +106,8 @@ Route::group(
         Route::post("expenses/delete", 'ExpenseController@delete');
 		//// Tables 
         Route::get("/tables", 'TableController@index');
+        Route::get("/tables/pdf", 'TableController@tablePDF')->name('tables.pdf');;
+        Route::get("/tables/{id}", 'TableController@show');
         Route::post("tables/save", 'TableController@store');
         Route::post("tables/get", 'TableController@get');
         Route::post("tables/delete", 'TableController@delete');

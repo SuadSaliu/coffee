@@ -41,7 +41,6 @@ class PushNotificationController extends Controller
     }
 
     // IOS
-
     public function send_push_notification($deviceToken, $badges, $msg, $data) {
         $key = public_path() . '/pushcert12.pem';
         $url = "ssl://gateway.push.apple.com:2195";

@@ -18,5 +18,5 @@ return [
     'lat' => '21.439138',
     'stripe' => 'yes',
     'hide_frontend' => 'no',
-    'qrCodeUrl' => 'QR code example'
+    'qrCodeUrl' => 'localhost:8000/menu'
 ];

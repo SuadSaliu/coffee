@@ -84,7 +84,7 @@
 		<tr>
 			<td style="background-color: #18A689; padding: 15px 20px;">
 				<span style="float: right;margin-top: 10px; color: #FFF;">As of: {{date("m/d/Y")}}</span>
-				<img loading="lazy" src="{{url('uploads/logo.jpg')}}" alt="">
+				<img loading="lazy" src="uploads/logo.jpg" alt="">
 			</td>
 		</tr>
 		

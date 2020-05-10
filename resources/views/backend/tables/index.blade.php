@@ -32,9 +32,14 @@
                         <a class="add_new btn btn-primary pull-right" href="javascript:void(0)" data-toggle="modal"
                             data-target="#myModal" style="margin-bottom:15px"><i class="fa fa-plus"> </i>
                             @lang('common.add')</a>
+
+                        <a class="btn btn-warning pull-right"
+                            href="{{ route('tables.pdf') }}" target="_blank"
+                            style="color: white; margin-bottom:15px; margin-right:10px">
+                            <i class="fa fa-plus"> </i>
+                            @lang('common.generatePDF')</a>
                     </div>
                 </div>
-
 
                 <div class="ibox-content">
 
@@ -42,8 +47,8 @@
                         <table class="table table-striped">
                             <thead>
                                 <tr>
-
                                     <th>@lang('common.title')</th>
+                                    <th>@lang('common.qrCode')</th>
                                     <th>@lang('common.options')</th>
                                 </tr>
                             </thead>
@@ -52,6 +57,10 @@
                                     <tr id="{{$row->id}}">
 
                                         <td>{{$row->table_name}}</td>
+                                        <td>
+                                            <img loading="lazy" width="100" alt=""
+                                                src="uploads/qr/table-{{$row->id}}.png" class="img-responsive">
+                                        </td>
 
                                         <td>
                                             <a data-id="{{$row->id}}" class="edit btn btn-primary" href="javascript:void(0)"
@@ -69,7 +78,6 @@
 
                             </tbody>
                         </table>
-                        {!! $tables->render() !!}
                     </div>
                     <!-- /.table-responsive -->
                 </div>
@@ -86,8 +94,6 @@ function clean($string)
     return preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
 }
 ?>
-
-
 
 
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -178,7 +184,5 @@ function clean($string)
     });
 
 </script>
-
-
 
 @endsection

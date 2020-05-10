@@ -50,7 +50,7 @@
 			
 						<div class="btn-profile">
 							<button type="submit" class="btn btn-primary">@lang('common.update')</button>
-							<a class="btn btn-link" href="{{ url('profile') }}">@lang('common.cancel')</a>
+							<a class="btn btn-link" href="{{ url('settings/profile') }}">@lang('common.cancel')</a>
 							<input type="button" data-toggle="modal" data-target="#resetPasswordModal"
 								class="btn btn-primary pull-right" value="@lang('common.reset_password')">
 						</div>

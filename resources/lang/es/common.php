@@ -38,6 +38,8 @@ return array (
   'password' => 'Password',
   'confirm_password' => 'Confirm Password',
   'no_record_found' => 'No Record Found',
+  'qrCode' => 'Qr code',
+  'generatePDF' => 'Generate PDF',
   'user_profile' => 'User Profile',
   'reset_password' => 'Reset Password',
   'old_password' => 'Old Password',

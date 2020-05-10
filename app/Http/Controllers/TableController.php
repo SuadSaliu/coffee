@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Table;
+use Config;
+use PDF;
+
 class TableController extends Controller
 {
     /**
@@ -14,7 +17,7 @@ class TableController extends Controller
     public function index()
     {
         $data = [
-            'tables' => Table::paginate(20),
+            'tables' => Table::all(),
         ];
 
         return view('backend.tables.index', $data);
@@ -49,11 +52,18 @@ class TableController extends Controller
             ->with('message-success', 'Table updated!');
         } else { 
             Table::insert($data);
+
+            $lastId = Table::latest()->first()->id;
+            $url = $request->root() . '/tables/' . $lastId;
+
+            \QrCode::format('png')
+                ->size(200)
+                ->generate($url,
+                        public_path('uploads/qr/table-' . $lastId . '.png'));
+
 			return redirect('tables')
             ->with('message-success', 'Table created!');
         }
-
-        
     }
 
     /**
@@ -84,9 +94,6 @@ class TableController extends Controller
         $expnese = Table::where("id", $id)->delete();
         echo json_encode($expnese);
     }
-     
-     
-	 
 
     /**
      * Remove the specified resource from storage.
@@ -102,5 +109,20 @@ class TableController extends Controller
 
         return redirect('expenses')
             ->with('message-success', 'Table deleted!');
+    }
+
+    public function tablePDF()
+    {
+        $data = [
+            'title' => "Tables",
+            'tables' => Table::all(),
+        ];
+        
+        // Send data to the view using loadView function of PDF facade
+        $pdf = PDF::loadView('backend.tables.table-pdf', $data);
+        // If you want to store the generated pdf to the server then you can use the store function
+        // $pdf->save(storage_path().'_filename.pdf');
+        // Finally, you can download the file using download function
+        return $pdf->download('table.pdf');
     }
 }

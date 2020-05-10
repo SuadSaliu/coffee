@@ -102,28 +102,21 @@
 <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table-stats" >
 	<thead>
 			<tr>
-				<th>Staff Name</th>
-				<th width="300" style="text-align: center;">Number of Sales</th>
+        <th>@lang('common.title')</th>
+        <th>@lang('common.qrCode')</th>
 			</tr>
 		</thead>
 		<tbody>
 			<?php $total_amount = 0; ?>
-			@foreach($sales as $sale) 
+			@foreach($tables as $table) 
 			<tr>
-				<td> @if(!empty($sale->user->name)) {{ $sale->user->name }} @else Unknown @endif</td>
-                <td style="text-align: center;"> ${{ $sale->total_amount }}</td>
-				
+        <td>{{$table->table_name}}</td>
+				<td>
+          <img loading="lazy" width="100" alt=""
+              src="uploads/qr/table-{{$table->id}}.png" class="img-responsive">
+        </td>
 			</tr>
-			<?php $total_amount += $sale->total_amount; ?>
 			@endforeach
-			
-			<tr>
-				<th style="text-align: right;"> Total Sales </th>
-                <th style="text-align: center;"> ${{$total_amount}}</th>
-				
-			</tr>
-			
-			
 		</tbody>
 </table>
 

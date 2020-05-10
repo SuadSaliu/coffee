@@ -8,7 +8,7 @@
             style="font-family: Times New Roman; font-size: 11.5px !important;margin-left:20px">
             <tr>
                 <td colspan="2" style="text-align:center" class="noborder"><img loading="lazy"
-                        src="{{url('uploads/logo.jpg')}}" width="220" alt="PRA"></td>
+                        src="uploads/logo.jpg" width="220" alt="PRA"></td>
 
             </tr>
 

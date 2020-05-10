@@ -191,18 +191,7 @@ class ReportController extends Controller
 		}	
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	 public function getRevenueRransections($date_difference="" , $type="pos") {
+	public function getRevenueRransections($date_difference="" , $type="pos") {
         $where = "";
 		$today='';
         if($today != ""){
@@ -222,9 +211,6 @@ class ReportController extends Controller
 		
 		$query = DB::select("SELECT SUM(amount) as amount, DATE_FORMAT(created_at,'%W') as day, DATE_FORMAT(created_at,'%d') as dat, DATE_FORMAT(created_at,'%M') as mon, created_at as dated FROM `sales` WHERE  type='$type' AND ".$where." GROUP BY MONTH(created_at) ORDER BY created_at DESC");
         return $query;
-		
-  
     }
-	
 	
 }

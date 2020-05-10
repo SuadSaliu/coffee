@@ -134,11 +134,11 @@ class ProductController extends Controller
             $image = \QrCode::format('png')
                     ->size(200)
                     ->generate(Config::get('constants.qrCodeUrl'),
-                                public_path('images/qrcode' . $id . '.png'));
+                                public_path('uploads/qr' . $id . '.png'));
 
             $data = [
                 'sale' => Sale::findOrFail($id),
-                'qr_path' => "images/qrcode". $id .".png"
+                'qr_path' => "uploads/qr". $id .".png"
             ];
 
             return Response::json($data, 200);
