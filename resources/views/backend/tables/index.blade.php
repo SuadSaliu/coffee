@@ -59,7 +59,7 @@
                                         <td>{{$row->table_name}}</td>
                                         <td>
                                             <img loading="lazy" width="100" alt=""
-                                                src="uploads/qr/table-{{$row->id}}.png" class="img-responsive">
+                                                src="{{asset('uploads/qr/table-' . $row->id . '.png')}}" class="img-responsive">
                                         </td>
 
                                         <td>

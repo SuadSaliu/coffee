@@ -75,9 +75,9 @@ class TableController extends Controller
      */
     public function show($id)
     {
-        $expense = Table::findOrFail($id);
+        $table = Table::findOrFail($id);
 
-        return view('backend.tables.show', compact('expense'));
+        return view('backend.tables.show', compact('table'));
     }
 
      public function get(Request $request) 
