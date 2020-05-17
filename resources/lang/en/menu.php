@@ -5,6 +5,7 @@ return [
 	"logout" => "Logout",
 	"dashboard" => "Dashboard",
 	"point_of_sale" => "Point of Sale",
+	"waiting_orders" => "Waiting orders",
 	"expenses" => "Expenses",
 	"online_orders" => "Online Orders",
 	"sales" => "Sales",

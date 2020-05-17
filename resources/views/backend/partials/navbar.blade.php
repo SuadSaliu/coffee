@@ -20,6 +20,9 @@
                 </li>
 				 @permission('dashboard')
 				 <li @if(Request::segment(1) == "admin" or Request::segment(1) == "dashboard") class="active" @endif><a href="{{ url('dashboard') }}"><i class="fa fa-th-large"></i> <span class="nav-label">@lang('menu.dashboard')<span></a></li>
+                 @endpermission
+                 @permission('view_waiting_orders')
+				 <li @if(Request::segment(1) == "waiting_orders") class="active" @endif><a href="{{ url('waiting_orders/create') }}"><i class="fa fa-diamond"></i> <span class="nav-label">@lang('menu.waiting_orders')<span></a></li>
 				 @endpermission
                  @permission('add_sale')
 				 <li @if(Request::segment(1) == "sales" and Request::segment(2) == "create") class="active" @endif><a href="{{ url('sales/create') }}"><i class="fa fa-diamond"></i> <span class="nav-label">@lang('menu.point_of_sale')<span></a></li>
