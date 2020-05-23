@@ -4,6 +4,8 @@ namespace App\Http\Controllers\api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Traits\PushNotificationTrait;
+
 use App\Category;
 use App\Product;
 use Response;
@@ -17,6 +19,8 @@ use Stripe;
 
 class ProductController extends Controller
 {
+    use PushNotificationTrait;
+
     /**
      * Getting All Product
      */
@@ -179,6 +183,10 @@ class ProductController extends Controller
         $updated = Sale::whereIn('id', $ids)->update(array("show_waitress" => 1));
 
         if ($updated) {
+            if ($push_notif) {
+                $this->send_notification_android();
+            }
+
             return Response::json([
                 "ids" => $request->input("ids"),
                 "status" => 'Successfully'

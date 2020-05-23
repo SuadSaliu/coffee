@@ -1,12 +1,10 @@
 <?php
-
-namespace App\Http\Controllers\api;
+namespace App\Http\Traits;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 
-class PushNotificationController extends Controller
-{
+trait PushNotificationTrait {
+    
     public function send_notification_android($device_id, $android_ids, $message, $title) {
         $result = array();
         $payload = array();
