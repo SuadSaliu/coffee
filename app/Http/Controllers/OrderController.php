@@ -145,6 +145,8 @@ class OrderController extends Controller
         unset($form["cc_code"]);
         unset($form["total_cost"]);
         
+        $form['show_waitress'] = 0;
+
         $sale = Sale::createAll($form);
 
         $errors = array(

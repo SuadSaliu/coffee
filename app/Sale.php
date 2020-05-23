@@ -34,6 +34,8 @@ class Sale extends Model
         'discount',
         'vat',
         'total_given',
+        'table_id',
+        'show_waitress',
         'change',
         'payment_with',
         'delivery_cost',

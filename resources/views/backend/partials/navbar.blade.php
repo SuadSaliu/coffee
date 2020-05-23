@@ -3,7 +3,7 @@
             <ul class="nav metismenu" id="side-menu">
                 <li class="nav-header">
                     <div class="dropdown profile-element"> <span>
-                            <img loading="lazy" alt="image" width="110" class="" src="uploads/logo.jpg" /> <br>
+                            <img loading="lazy" alt="image" width="110" class="" src="{{asset('uploads/logo.jpg')}}" /> <br>
                              </span>
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                             <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">{{Auth::user()->name}}</strong>

@@ -8,6 +8,7 @@ use App\Category;
 use App\Product;
 use Response;
 use Config;
+use DB;
 
 use App\Sale;
 use Validator;
@@ -27,7 +28,7 @@ class ProductController extends Controller
             Product::where('category_id', $catQuery)->orderBy('name', 'asc')->paginate(8);
 
         return Response::json($products, 200);
-     }
+    }
 
     /**
      * Getting All Categories
@@ -145,6 +146,49 @@ class ProductController extends Controller
         } catch (\Throwable $th) {
             return Response::json(["error" => 1], 400);
         }
+    }
+
+    
+    /**
+     * Getting All Orders with status available
+     */
+    public function waitingOrders() 
+    {
+        try {
+            $orders = DB::table('sales')
+                ->join('tables', 'sales.table_id', '=', 'tables.id')
+                ->leftJoin('customers', 'sales.customer_id', '=', 'customers.id')
+                ->select('sales.id', 'tables.table_name', 'customers.name', 'sales.updated_at')
+                ->where("show_waitress", 0)
+                ->paginate(10);
+
+            return Response::json($orders, 200);
+        } catch (\Throwable $th) {
+            return Response::json(["error" => 1], 400);
+        }
+    }
+
+    /**
+     * Getting All Orders with status available
+     */
+    public function holdWaitingOrders() 
+    {
+        $ids = $request->input("ids");
+        $push_notif = $request->input("push_notif");
+
+        $updated = Sale::whereIn('id', $ids)->update(array("show_waitress" => 1));
+
+        if ($updated) {
+            return Response::json([
+                "ids" => $request->input("ids"),
+                "status" => 'Successfully'
+            ], 200);
+        }
+        
+        return Response::json([
+            "status" => 'Failed'
+        ], 400);
+
     }
 
 }

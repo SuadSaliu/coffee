@@ -51,7 +51,10 @@ Route::group(
         Route::post('category/upload_photo_crop', 'CategoryController@updatePhotoCrop');
 		Route::post('product/addToArchive', 'ProductController@addToArchive');
 
-        Route::resource('waiting_orders', 'WaitingOrdersController', ['only' => ['create', 'store']]);
+        Route::get('waiting_orders/create', 'WaitingOrdersController@create');
+        Route::get('waiting_orders/orders', 'WaitingOrdersController@orders');
+        Route::post('waiting_orders/hold_orders', 'WaitingOrdersController@holdOrders');
+
         Route::resource('sales', 'SaleController', ['only' => ['create', 'store']]);
         Route::get('sales/receipt/{id}', 'SaleController@receipt');
         Route::post('sales/complete_sale', 'SaleController@completeSale');

@@ -39,4 +39,7 @@ return [
 	"Table No"=> "Table #",
 	"hold_order" => "Hold Order",
 	"order_no" => "Order Number",
+	"order_list" => "Order list",
+	"addToList" => "Add to list",
+	"send_push_notification" => "Send push notification",
 ];

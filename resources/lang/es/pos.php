@@ -39,4 +39,7 @@ return [
 	"Table No" => "Número de mesa",
 	"hold_order" => "Mantener orden",
 	"order_no" => "Número de orden",
+	"order_list" => "Order list",
+	"addToList" => "Add to list",
+	"send_push_notification" => "Send push notification",
 ];

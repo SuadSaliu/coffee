@@ -351,11 +351,25 @@
 				success: function ( msg ) {
 					
 					var obj = JSON.parse(msg);
-					var html = "";
-					$.each(obj , function(key,value) { 
-						html += '<div class="holdt"> <a style="color:red" href="javascript:void(0)" data-id= "' +  value.id + '" class="deleteHoldOrder"><i class="fa fa-trash"> </i></a> <a href="javascript:void(0)" class="ViewHoldOrder" data-table="' + value.table + '" data-table_id="' + value.table_id + '" data-id= "' +  value.id + '">@lang('pos.order_no'):: ' +  value.id + "</a> <span style='padding-left:30px'>@lang('pos.held_by'):  " + value.username + "<span style='padding-left:30px'>@lang('pos.Table No'):  " +  value.table + "</span></div>";
+					var eachIn = false;
+					var html = '<div class="table-responsive"> <table class="table"> <tbody><thead> <tr> <th>@lang('pos.Table No')</th> <th>@lang('pos.order_no')</th> <th>@lang('pos.held_by')</th> <th></th> </tr> </thead><tbody>';
+					$.each(obj , function(key,value) {
+						eachIn = true; 
+						html += `<tr class="holdt">
+									<th scope="row">${value.table}</th>
+									<td>
+										<a href="javascript:void(0)" class="ViewHoldOrder" data-table="${value.table}"
+											data-table_id="${value.table_id}" data-id="${value.id}">${value.id}</a></td>
+									<td>${value.username}</td>
+									<td>
+										<a style="color:red" href="javascript:void(0)" data-id="${value.id}"
+											class="deleteHoldOrder"><i class="fa fa-trash fa-lg"> </i></a>
+									</td>
+								</tr>`;
 					});
-					if(html == "") { 
+					html += '</tbody></table></div>';
+
+					if(!eachIn) { 
 						html = "No Hold Table Found";
 					}
 					$("#HoldOrdersList").html(html);
@@ -453,22 +467,22 @@ $("body").on("keyup" , "#mobile_number", function(e) {
 
 
 $("body").on("click",".deleteHoldOrder", function() {
-				$(this).parent(".holdt").remove();
-				
-				var form_dataa = {
-					id:$(this).attr("data-id")
-				}
-				$.ajax( {
-					type: 'POST',
-					headers: {
-						'X-CSRF-TOKEN': $( 'meta[name="csrf-token"]' ).attr( 'content' )
-					},
-					url: '<?php echo url("sale/hold_order_remove"); ?>',
-					data: form_dataa,
-					success: function ( msg ) {
-						
-					}
-				});
+	$(this).parent().parent(".holdt").remove();
+	
+	var form_dataa = {
+		id:$(this).attr("data-id")
+	}
+	$.ajax( {
+		type: 'POST',
+		headers: {
+			'X-CSRF-TOKEN': $( 'meta[name="csrf-token"]' ).attr( 'content' )
+		},
+		url: '<?php echo url("sale/hold_order_remove"); ?>',
+		data: form_dataa,
+		success: function ( msg ) {
+			
+		}
+	});
 				
 });
 
@@ -600,9 +614,9 @@ $("body").on("click","#CustomerNext", function() {
 <style type="text/css">
 
 	@media screen and (min-width: 768px) {
-		.wrapper {
+		/* .wrapper {
 			height: calc(67vw - 12em) !important;
-		}
+		} */
 
 		.wrapper > .row,
 		.wrapper > .row .col-xs-12,
@@ -808,6 +822,7 @@ $("#TableNoCart").text("");
 			type: $( "#OrderType" ).val(),
 			status:status,
 			total_given: $( "#total_given" ).val(),
+			table_id: parseInt($("#table_id").val(), 10),
 
 			change: $( "#change" ).val(),
 			vat: $( "#vat" ).val(),
