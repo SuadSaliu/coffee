@@ -6,6 +6,7 @@ use App\Customer;
 use App\Http\Requests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
+
 class CustomerController extends Controller
 {
     /**
@@ -118,23 +119,23 @@ class CustomerController extends Controller
 		echo json_encode($record);
 	}
     
-	
-	
 	public function storeCustomer(Request $request) { 
 		$id = $request->input("id");
 		$data_array = array();
 		$data = array(
 			"name" => $request->input("name"),
 			"phone" => $request->input("phone"),
+			"email" => $request->input("email"),
 			"neighborhood" => $request->input("neighborhood"),
 			"address" => $request->input("address"),
 			"comments" => $request->input("comments")
 		);
 		$data_array["message"] = "OK";
-		if($id) { 
+		if($id) {
 			Customer::where("id" , $id)->update($data);
 			$data_array["id"] = $id;
 		} else { 
+            $data["password"] = bcrypt($data["name"]);
 			$insert_id = Customer::insertGetId($data);
 			$data_array["id"] = $insert_id;
 		}

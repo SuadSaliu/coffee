@@ -15,6 +15,7 @@ return [
 	"change" => "Cambio",
 	"comment" => "Comentario",
 	"full_name" => "Nombre completo",
+	"email" => "Email",
 	"neighborhood" => "Barrio",
 	"address" => "Dirección",
 	"is_new_client" => "Es un nuevo cliente",

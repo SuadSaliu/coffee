@@ -15,6 +15,7 @@ return [
 	"change" => "Change",
 	"comment" => "Comment",
 	"full_name" => "Full Name",
+	"email" => "Email",
 	"neighborhood" => "Neighbourhood",
 	"address" => "Address",
 	"is_new_client" => "New Client",

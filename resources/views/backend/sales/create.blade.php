@@ -432,6 +432,7 @@
 
 
 $("body").on("click","#Checkout", function() {
+	if ($('#CartHTML tr').length === 0) { return; }
 	var OrderType = $("#OrderType").val();
 	if(OrderType == "order") { 
 		$("#myModalHome").modal("show");
@@ -452,6 +453,7 @@ $("body").on("keyup" , "#mobile_number", function(e) {
 				$("#full_name").val(data['name']);
 				//$("#phone").val(data['mobile_number']);
 				$("#address_c").val(data['address']);
+				$("#email").val(data['email']),
 				$("#neighborhood").val(data['neighborhood']);
 				$("#comments_c").val(data['comments']);
 				$("#id").val(data['id']);
@@ -528,11 +530,15 @@ $("body").on("click",".deleteHoldOrder", function() {
 
 				<div class="col-sm-12">
 					<div class="form-group">
-						<input type="text" id="comments_c" placeholder="@lang('pos.comment')" class="form-control">
+						<input type="text" id="email" placeholder="@lang('pos.email')" class="form-control ">
 					</div>
 				</div>
 
-
+				<div class="col-sm-12">
+					<div class="form-group">
+						<input type="text" id="comments_c" placeholder="@lang('pos.comment')" class="form-control">
+					</div>
+				</div>
 
 				<div class="col-sm-12 ">
 					<span id="errorMessage" style="color:red"> </span>
@@ -544,8 +550,6 @@ $("body").on("click",".deleteHoldOrder", function() {
 					<button type="button" id="CustomerNext" class="btn btn-primary">@lang('pos.Next')</button>
 					<span id="errorMessage" style="color:red"> </span>
 				</div>
-
-
 
 			</div>
 
@@ -560,6 +564,7 @@ $("body").on("click",".deleteHoldOrder", function() {
 	$("#full_name").val("");
 	$("#neighborhood").val("");
 	$("#address_c").val("");
+	$("#email").val("");
 	$("#comments_c").val("");
 	$("#id").val("");
 	$("#mobile_number").val("");
@@ -569,13 +574,14 @@ $("body").on("click","#CustomerNext", function() {
 	var form_data = {
 		name:$("#full_name").val(),
 		phone:$("#mobile_number").val(),
+		email:$("#email").val(),
 		neighborhood:$("#neighborhood").val(),
 		address:$("#address_c").val(),
 		comments:$("#comments_c").val(),
 		id:$("#id").val()
 	}
 	
-	if($("#mobile_number").val() == "" || $("#full_name").val() == "") { 
+	if(!$("#mobile_number").val() || !$("#full_name").val() || !$("#email").val()) { 
 		$("#errorMessage").html("@lang('pos.required')");
 		return false;
 	}
@@ -594,8 +600,6 @@ $("body").on("click","#CustomerNext", function() {
 				$("#myModalHome").modal("hide");
 				$("#myModal").modal("show");
 				$("#customer_id").val(obj['id']);
-			} else { 
-				
 			}
 		}
 	});
@@ -799,6 +803,13 @@ $("#TableNoCart").text("");
 	}
 
 	$( "body" ).on( "click", "#completeOrder", function () {
+
+		const totalGivenVal = $( "#total_given" ).val();
+		if (!totalGivenVal) {
+			toastr.error( 'Total paid is empty' );
+			return;
+		}
+
 		if ( cart.length < 1 ) {
 
 			$( "#myModal" ).modal( "hide" );
@@ -821,7 +832,7 @@ $("#TableNoCart").text("");
 			payment_with: $( "#payment_type" ).val(),
 			type: $( "#OrderType" ).val(),
 			status:status,
-			total_given: $( "#total_given" ).val(),
+			total_given: totalGivenVal,
 			table_id: parseInt($("#table_id").val(), 10),
 
 			change: $( "#change" ).val(),
@@ -864,6 +875,7 @@ $("#TableNoCart").text("");
 				
 				$("#full_name").val("");
 				$("#address_c").val("");
+				$("#email").val(""),
 				$("#neighborhood").val("");
 				$("#comments_c").val("");
 				$("#id").val("");
