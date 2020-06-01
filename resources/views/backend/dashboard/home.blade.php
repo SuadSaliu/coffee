@@ -293,11 +293,11 @@ $Months =array(1=>"January","February","March","April","May","June","July",
     <script src="{{url('assets/js/plugins/flot/jquery.flot.resize.js')}}"></script>
     <script src="{{url('assets/js/plugins/flot/jquery.flot.pie.js')}}"></script>
     <script src="{{url('assets/js/plugins/flot/jquery.flot.time.js')}}"></script> */ ?>
-	
-	<script src="//code.highcharts.com/highcharts.js"></script>
-	<script src="//code.highcharts.com/modules/exporting.js"></script>
+    
+	<script src="{{url('assets/js/highcharts.js')}}"></script>
+	<script src="{{url('assets/js/highcharts-exporting.js')}}"></script>
 
-		
+
 		<script> 
 		// $(function() {
    // var barOptions = {
@@ -413,6 +413,9 @@ $Months =array(1=>"January","February","March","April","May","June","July",
             $(this).addClass('selected').siblings().removeClass('selected');
         });
     $(function () {
+        // if (!$('#flotchart3').highcharts) {
+        //     return;
+        // }
         $('#flotchart3').highcharts({
             chart: {
                 type: 'line'

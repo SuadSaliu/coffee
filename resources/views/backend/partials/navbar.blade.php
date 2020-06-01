@@ -102,14 +102,20 @@
                     <a href="{{ url('tables') }}"><i class="fa fa-list"></i> <span class="nav-label"> @lang('menu.tables')</span></a>
                 </li>
 
-                 @permission('users')
-				
                 
+                @permission('view_bussiness')
+                <li @if(Request::segment(1) == "bussiness") class="active" @endif>
+                    <a href="{{ url('bussiness') }}"><i class="fa fa-users"></i> <span class="nav-label"> @lang('menu.bussiness')</span></a>
+                </li>
+                @endpermission
+
+                @permission('users')
                 <li @if(Request::segment(1) == "users") class="active" @endif>
                     <a href="{{ url('users') }}"><i class="fa fa-users"></i> <span class="nav-label"> @lang('menu.users')</span></a>
                 </li>
-				@endpermission
-                 @permission('roles')
+                @endpermission
+                
+                @permission('roles')
 				
 				<li @if(Request::segment(1) == "roles") class="active" @endif>
                     <a href="{{ url('roles') }}"><i class="fa fa-users"></i> <span class="nav-label"> @lang('menu.roles')</span></a>

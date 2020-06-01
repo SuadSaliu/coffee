@@ -30,5 +30,5 @@ return [
 	"logout" => "Cerrar sesión",
 	"search_for_something" => "Buscar producto...",
 	"tables" => "Mesas",
-	
+	"bussiness" => "Bussiness",
 ];

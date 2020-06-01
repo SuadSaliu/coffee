@@ -45,4 +45,6 @@ return array (
   'old_password' => 'Old Password',
   'new_password' => 'New Password',
   'confirm_new_password' => 'Confirm New Password',
+  'bussiness' => 'Bussiness',
+  'bussinessRole' => 'Bussiness role',
 );

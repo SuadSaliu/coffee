@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Table;
 use Config;
 use PDF;
+use Auth;
+use App\User;
 
 class TableController extends Controller
 {
@@ -16,8 +18,21 @@ class TableController extends Controller
      */
     public function index()
     {
+        // $userBussId = Auth::user()->bussiness_id;
+
+        // $bus = Auth::user()->bussiness->name;
+        // $bus = User::with('bussiness'); 
+        // $bus = User::find(1); 
+        // dd($bus);
+
+        // $data = [
+        //     'tables' => $userBussId == 0 ?
+        //         Table::all() :
+        //         Table::where('id', $userBussId)->get()
+        // ];
+
         $data = [
-            'tables' => Table::all(),
+            'tables' => Table::all()
         ];
 
         return view('backend.tables.index', $data);

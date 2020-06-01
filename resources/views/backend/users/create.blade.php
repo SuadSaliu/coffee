@@ -68,6 +68,35 @@
                         <div class="hr-line-dashed"></div>
 
                         <div class="form-group">
+                            <label class="col-sm-4 control-label" for="bussiness_id">@lang('common.bussiness')</label>
+                            <div class="col-sm-8">
+                                <select class="form-control" id="bussiness_id" name="bussiness_id">
+                                    <option value="null"></option>
+                                    @foreach($bussiness as $id => $bus)
+                                    <option value="{{ $bus->id }}"
+                                        {{ !($bus->id == old('bussiness_id')) ?: 'selected="selected"' }}>
+                                        {{ $bus->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label" for="bussiness_role">@lang('common.bussinessRole')</label>
+                            <div class="col-sm-8">
+                                <select class="form-control" id="bussiness_role" name="bussiness_role">
+                                    <option value="null"></option>
+                                    <option value="1">Admin</option>
+                                    <option value="2">User</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="form-group">
                             <label class="col-sm-4 control-label" for="password">@lang('common.password')</label>
                             <div class="col-sm-8">
                                 <input type="password" class="form-control" id="password" name="password">
@@ -88,7 +117,7 @@
                         <div class="form-group">
                             <div class="col-12 text-center">
 
-                                <a class="btn btn-white" href="{{ url('products') }}">Cancel</a>
+                                <a class="btn btn-white" href="{{ url('users') }}">Cancel</a>
                                 <button class="btn btn-primary ml-2" type="submit">Save changes</button>
                             </div>
                         </div>

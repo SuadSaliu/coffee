@@ -67,6 +67,34 @@
                         </div>
                         <div class="hr-line-dashed"></div>
 
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label" for="bussiness_id">@lang('common.bussiness')</label>
+                            <div class="col-sm-8">
+                                <select class="form-control" id="bussiness_id" name="bussiness_id">
+                                    <option value="null"></option>
+
+                                    @foreach($bussiness as $id => $bus)
+                                    <option value="{{ $bus->id }}"
+                                        {{ !($bus->id == old('bussiness_id', $bussiness_id)) ?: 'selected="selected"' }}>
+                                        {{ $bus->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label" for="bussiness_role">@lang('common.bussinessRole')</label>
+                            <div class="col-sm-8">
+                                <select class="form-control" id="bussiness_role" name="bussiness_role">
+                                    <option value="null"></option>
+                                    <option value="1" {{ $bussiness_role == 1 ? 'selected="selected"' : '' }}>Admin</option>
+                                    <option value="2" {{ $bussiness_role == 2 ? 'selected="selected"' : '' }}>User</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+
                         <div class="form-group text-center">
                             <a class="btn btn-link" href="{{ url('users') }}">@lang('common.cancel')</a>
                             <button type="submit" class="btn ml-2 btn-primary">@lang('common.update')</button>

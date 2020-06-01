@@ -4,6 +4,12 @@
 
 <link href="assets/css/plugins/dataTables/datatables.min.css" rel="stylesheet">
 
+<style>
+    .bussinesss:not(:last-child)::after {
+        content: ', ';
+    }
+</style>
+
 <div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-lg-10">
         <h2>@lang('common.users')</h2>
@@ -36,8 +42,6 @@
                             <i class="fa fa-chevron-up"></i>
                         </a>
 
-
-
                     </div>
                 </div>
                 <div class="ibox-content">
@@ -51,6 +55,8 @@
                                     <th>@lang('common.name')</th>
                                     <th>@lang('common.email')</th>
                                     <th>@lang('common.role')</th>
+                                    <th>@lang('common.bussiness')</th>
+                                    <th>@lang('common.bussinessRole')</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -61,6 +67,15 @@
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->email }}</td>
                                     <td>{{ $user->role->display_name }}</td>
+                                    <td>
+                                        @foreach($user->bussiness as $bus)
+                                            <b class="bussinesss">{{ $bus->name ?? '' }}</b>
+                                        @endforeach
+                                    </td>
+                                    <td>
+                                        {{ $user->bussiness_role }}
+                                    </td>
+
                                     <td class="tb-btn">
                                         <form id="delete-user" action="{{ url('users/' . $user->id) }}" method="POST"
                                             class="form-inline">

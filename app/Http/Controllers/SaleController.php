@@ -69,7 +69,7 @@ class SaleController extends Controller
         $image = \QrCode::format('png')
                     ->size(200)
                     ->generate(Config::get('constants.qrCodeUrl'),
-                                public_path('uploads/qr' . $id . '.png'));
+                                public_path('uploads/qr/qr' . $id . '.png'));
 
         $data = [
             'sale' => Sale::findOrFail($id),

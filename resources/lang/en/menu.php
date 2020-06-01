@@ -32,4 +32,5 @@ return [
 	"logout" => "Logout",
 	"search_for_something" => "Search for something...",
 	"tables" => "Tables",
+	"bussiness" => "Bussiness",
 ];

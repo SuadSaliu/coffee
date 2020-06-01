@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use App\Role;
+use App\Bussiness;
+use App\BussinessUser;
 use App\User;
 use DB;
 
@@ -16,12 +18,21 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users =  User::all();
-		foreach($users as $user) { 
-			$user->role = Role::find($user->role_id);
+        $users = User::all();
+
+		foreach($users as $user) {
+            try {
+                $user->role = Role::find($user->role_id);
+            } catch (\Throwable $th) {}
+            try {
+                $getBusRole = BussinessUser::findOrFail($user->id)->bussiness_role;
+                $user->bussiness_role = $getBusRole == 1 ? 'Admin' : 'User'; 
+            } catch (\Throwable $th) {
+                $user->bussiness_role = '';
+            }
 		}
 		
-		$data['users'] = $users;
+        $data['users'] = $users;
 
         return view('backend.users.index', $data);
     }
@@ -34,7 +45,8 @@ class UserController extends Controller
     public function create()
     {
         $data = [
-            'roles' => Role::get()
+            'roles' => Role::get(),
+            'bussiness' => Bussiness::get()
         ];
 
         return view('backend.users.create', $data);
@@ -50,10 +62,25 @@ class UserController extends Controller
     public function store(Requests\StoreUser $request)
     {
         $form = $request->all();
-
-        $user = User::create($form);
-		DB::table('role_user')->insert(array("role_id" => $form['role_id'] , 'user_id' => $user->id));
-		
+        
+        $user = User::create(
+            array(
+                "name" => $form['name'],
+                "email" => $form['email'],
+                "role_id" => $form['role_id'],
+                "password" => $form['password']
+            )
+        );
+		DB::table('role_user')->insert(
+            array("role_id" => $form['role_id'] , 'user_id' => $user->id)
+        );
+		DB::table('bussiness_user')->insert(
+            array(
+                "user_id" => $user->id,
+                'bussiness_id' => $form['bussiness_id'],
+                'bussiness_role' => $form['bussiness_role']
+            )
+        );
 
         return redirect('users')
             ->with('message-success', 'User created!');
@@ -86,8 +113,17 @@ class UserController extends Controller
 
         $data = [
             'user'  => $user,
-            'roles' => Role::get()
+            'roles' => Role::get(),
+            'bussiness' => Bussiness::get()
         ];
+
+        try {
+            $getBusRole = BussinessUser::findOrFail($id);
+            $data['bussiness_id'] = $getBusRole->bussiness_id;
+            $data['bussiness_role'] = $getBusRole->bussiness_role; 
+        } catch (\Throwable $th) {
+            $data['bussiness_role'] = '';
+        }
 
         return view('backend.users.edit', $data);
     }
@@ -104,15 +140,41 @@ class UserController extends Controller
     {
         $form = $request->all();
 
+        $data = [
+            "name" => $form['name'],
+            "email" => $form['email'],
+            "role_id" => $form['role_id']
+        ];
+
         $user = User::findOrFail($id);
-        $user->update($form);
+        $user->update($data);
 		
 		$role = DB::table('role_user')->where("user_id" , $id)->first();
 		if($role) { 
 			DB::table('role_user')->where("user_id" , $id)->update(array("role_id" => $form['role_id']));
 		} else { 
 			DB::table('role_user')->insert(array("role_id" => $form['role_id'] , "user_id" => $id));
-		}
+        }
+        
+        try {
+            $role = DB::table('bussiness_user')->where("user_id" , $id)->first();
+            if($role) { 
+                DB::table('bussiness_user')
+                    ->where("user_id" , $id)
+                    ->update(array(
+                        "user_id" => $user->id,
+                        'bussiness_id' => $form['bussiness_id'],
+                        'bussiness_role' => $form['bussiness_role']
+                    ));
+            } else { 
+                DB::table('bussiness_user')
+                    ->insert(array(
+                        "user_id" => $user->id,
+                        'bussiness_id' => $form['bussiness_id'],
+                        'bussiness_role' => $form['bussiness_role']
+                    ));
+            }
+        } catch (\Throwable $th) { }
 
         return redirect('users')
             ->with('message-success', 'User updated!');

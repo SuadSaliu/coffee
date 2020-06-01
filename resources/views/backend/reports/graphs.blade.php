@@ -46,10 +46,8 @@ $Months =array(1=>"January","February","March","April","May","June","July",
         </div>
     </div>
 
-
-    <script src="//code.highcharts.com/highcharts.js"></script>
-    <script src="//code.highcharts.com/modules/exporting.js"></script>
-
+	<script src="{{url('assets/js/highcharts.js')}}"></script>
+	<script src="{{url('assets/js/highcharts-exporting.js')}}"></script>
 
     <script>
         // $(function() {

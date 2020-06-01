@@ -45,6 +45,7 @@ Route::group(
         Route::resource('suppliers', 'SupplierController');
         Route::resource('products', 'ProductController');
        
+        Route::resource('bussiness', 'BussinessController');
         Route::resource('users', 'UserController');
         Route::post('product/upload_photo', 'ProductController@uploadPhoto');
         Route::post('product/upload_photo_crop', 'ProductController@updatePhotoCrop');
