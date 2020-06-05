@@ -29,9 +29,15 @@ class ProductController extends Controller
     public function products(Request $request) {
         $catQuery = $request->query('category');
 
+        $bussUserId = BussinessUser::find($request->user()->id);
+
         $products = !$catQuery ?
-            Product::orderBy('name', 'asc')->paginate(8) :
-            Product::where('category_id', $catQuery)->orderBy('name', 'asc')->paginate(8);
+            !$bussUserId ?
+                Product::orderBy('name', 'asc')->paginate(10) :
+                Product::orderBy('name', 'asc')->where('bussiness_id', $bussUserId->bussiness_id)->paginate(10) :
+            !$bussUserId ?
+                Product::where('category_id', $catQuery)->orderBy('name', 'asc')->paginate(10) :
+                Product::where('category_id', $catQuery)->where('bussiness_id', $bussUserId->bussiness_id)->orderBy('name', 'asc')->paginate(10);
 
         return Response::json($products, 200);
     }
@@ -39,9 +45,13 @@ class ProductController extends Controller
     /**
      * Getting All Categories
      */
-    public function categories()
+    public function categories(Request $request)
     {
-        $categories = Categories::all(['id', 'name'])->where("is_delete" , 0)->orderBy("name" , "ASC");
+        $bussUserId = BussinessUser::find($request->user()->id);
+
+        $categories = !$bussUserId ?
+            Categories::all(['id', 'name'])->where("is_delete" , 0)->orderBy("name" , "ASC") :
+            Categories::all(['id', 'name'])->where("is_delete" , 0)->where('bussiness_id', $bussUserId->bussiness_id)->orderBy("name" , "ASC");
 
         return Response::json($categories, 200);
     }
@@ -51,7 +61,16 @@ class ProductController extends Controller
      */
     public function order(Request $request)
     {
+        $bussUserId = BussinessUser::find($request->user()->id);
+
         $form = $request->all();
+
+        if ($bussUserId) {
+            $form['bussiness_id'] = $bussUserId->bussiness_id;
+        }
+        
+        $form['show_waitress'] = 0;
+
         $items = $request->input('items');
         $amount = 0;
 
@@ -135,8 +154,9 @@ class ProductController extends Controller
     /**
      * Getting All Categories
      */
-    public function receiptTicket($id) {
-        return Response::json(["error" => 1], 400);
+    public function receiptTicket(Request $request, $id) {
+        $bussUserId = BussinessUser::find($request->user()->id);
+        
         try {
             $image = \QrCode::format('png')
                     ->size(200)
@@ -147,6 +167,13 @@ class ProductController extends Controller
                 'sale' => Sale::findOrFail($id),
                 'qr_path' => "uploads/qr". $id .".png"
             ];
+
+            if (
+                !$data['sale']->bussiness_id ||
+                $data['sale']->bussiness_id != $bussUserId->bussiness_id
+            ) {
+                return Response::json(["error" => 2], 403);
+            }
 
             return Response::json($data, 200);
         } catch (\Throwable $th) {
