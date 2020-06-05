@@ -8,6 +8,8 @@ use App\Http\Traits\PushNotificationTrait;
 
 use App\Category;
 use App\Product;
+use App\BussinessUser;
+
 use Response;
 use Config;
 use DB;
@@ -156,14 +158,24 @@ class ProductController extends Controller
     /**
      * Getting All Orders with status available
      */
-    public function waitingOrders() 
+    public function waitingOrders(Request $request) 
     {
         try {
-            $orders = DB::table('sales')
+            $bussUserId = BussinessUser::find($request->user()->id);
+
+            $orders = !$bussUserId ?
+                DB::table('sales')
+                    ->join('tables', 'sales.table_id', '=', 'tables.id')
+                    ->leftJoin('customers', 'sales.customer_id', '=', 'customers.id')
+                    ->select('sales.id', 'tables.table_name', 'customers.name', 'sales.updated_at')
+                    ->where("sales.show_waitress", 0)
+                    ->paginate(10) :
+                DB::table('sales')
                 ->join('tables', 'sales.table_id', '=', 'tables.id')
                 ->leftJoin('customers', 'sales.customer_id', '=', 'customers.id')
                 ->select('sales.id', 'tables.table_name', 'customers.name', 'sales.updated_at')
-                ->where("show_waitress", 0)
+                ->where("sales.show_waitress", 0)
+                ->where('sales.bussiness_id', $bussUserId->bussiness_id)
                 ->paginate(10);
 
             return Response::json($orders, 200);
