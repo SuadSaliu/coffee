@@ -129,7 +129,7 @@
 
 							<div class="form-group">
 								<label class="col-sm-6 control-label">Customer name</label>
-								<div class="col-sm-6 text-left" id="name">${ value.name || '' }</div>
+								<div class="col-sm-6 text-left" id="name">${ value.name || 'Website user' }</div>
 							</div>
 
 							<div class="form-group">

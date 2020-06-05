@@ -35,11 +35,12 @@ class Sale extends Model
         'vat',
         'total_given',
         'table_id',
-        'show_waitress',
         'change',
         'payment_with',
         'delivery_cost',
         'comments',
+        'show_waitress',
+        'bussiness_id',
     ];
 
     protected $appends = [

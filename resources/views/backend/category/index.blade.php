@@ -58,8 +58,14 @@
                                 @forelse ($categories as $key => $category)
                                 <tr class="gradeX">
                                     <td>{{ $categories->firstItem() + $key }}</td>
-                                    <td><img loading="lazy" width="70" id="image_source"
+                                    <td>
+                                        @if (!$category->bussiness_id)
+                                        <img loading="lazy" width="70" id="image_source"
                                             src="<?php echo url("uploads/category/thumb/" . $category->id . ".jpg?rand=".rand(0, 100)); ?>">
+                                        @else
+                                        <img loading="lazy" width="70" id="image_source"
+                                            src="<?php echo url("uploads/category/" .$category->bussiness_id . "/thumb/" . $category->id . ".jpg?rand=".rand(0, 100)); ?>">
+                                        @endif                                        
                                     </td>
                                     <td>{{ $category->name }}</td>
 

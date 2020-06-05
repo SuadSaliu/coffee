@@ -27,8 +27,7 @@ class PageController extends Controller
      
     public function index() 
     {
-        
-            $pages = Page::paginate(25);
+        $pages = Page::paginate(25);
         return view('backend.pages.home', ['pages' => $pages, "title" => "Pages"]);
     }
         

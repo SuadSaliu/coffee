@@ -38,6 +38,7 @@ class Product extends Model
         'category_id',
         'description',
         'titles',
+        'bussiness_id',
     ];
 
     public function scopeSearchByKeyword($query, $keyword)

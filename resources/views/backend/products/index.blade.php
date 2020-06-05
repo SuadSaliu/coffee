@@ -52,8 +52,16 @@
                                 @forelse ($products as $key => $product)
                                 <tr class="gradeX">
                                     <td>{{ $products->firstItem() + $key }}</td>
-                                    <td><img loading="lazy" width="100px"
-                                            src="{{url('uploads/products/thumb/' .$product->id . '.jpg')}}"></td>
+                                    <td>
+                                        @if (!$product->bussiness_id)
+                                        <img loading="lazy" width="100px"
+                                            src="{{url('uploads/products/thumb/' .$product->id . '.jpg')}}">
+                                        @else
+                                        <img loading="lazy" width="100px"
+                                        src="{{url('uploads/products/' .$product->bussiness_id . '/thumb/' .$product->id . '.jpg')}}">
+                                        @endif
+
+                                    </td>
                                     <td>{{ $product->name }}</td>
                                     <td>
                                         <?php $prices = json_decode($product->prices); $titles = json_decode($product->titles);?>

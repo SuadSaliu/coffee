@@ -52,6 +52,11 @@ class User extends Authenticatable
         return $this->belongsToMany('App\Bussiness');
     }
 
+    public function bussinessUser()
+    {
+        return $this->belongsToMany('App\BussinessUser', 'bussiness_user', 'user_id');
+    }
+
     public function setPasswordAttribute($password)
     {
         $this->attributes['password'] = bcrypt($password);

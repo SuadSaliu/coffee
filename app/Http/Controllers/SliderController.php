@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use DB;
 use App\Slider;
+use App\BussinessUser;
+use Auth;
+
 class SliderController extends Controller
 {
     
@@ -17,14 +20,19 @@ class SliderController extends Controller
     
     public function index() 
     {
-        $sliders = Slider::get();
+        $bussUserId = BussinessUser::find(Auth::id());
+
+        $sliders = !$bussUserId ?
+            Slider::get() :
+            Slider::where('bussiness_id', $bussUserId->bussiness_id)->get();
+        
         return view('backend.slider.index', ['title' => "Sliders" , 'sliders' => $sliders]);
     }
      
     public function save(Request $request) 
     { 
         $data = array(
-        "title" => $request->input("title")
+            "title" => $request->input("title")
         );
         
         $destinationPath = "uploads/slider/";

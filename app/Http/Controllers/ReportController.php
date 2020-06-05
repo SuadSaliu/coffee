@@ -6,6 +6,8 @@ use App\Sale;
 use App\Product;
 use App\Expense;
 use App\Activity;
+use App\BussinessUser;
+use Auth;
 use DB;
 use PDF;
 use App\User;
@@ -18,10 +20,6 @@ class ReportController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-	 
-	 
-	
-	
     public function index(Request $request , $type)
     {
         $form = $request->all();
@@ -30,7 +28,12 @@ class ReportController extends Controller
 		$start = $request->input('start');
 		$end = $request->input('end');
 		
-			$query = DB::table("sales");
+        $bussUserId = BussinessUser::find(Auth::id());
+
+			$query = !$bussUserId ?
+				DB::table("sales") :
+				DB::table("sales")->where('bussiness_id', $bussUserId->bussiness_id);
+				
 			$title = "All";
 			if($date_range == "today") {
 				$title = "Today";
@@ -91,7 +94,12 @@ class ReportController extends Controller
 		$start = $request->input('start');
 		$end = $request->input('end');
 		
-			$query = DB::table("sales");
+		$bussUserId = BussinessUser::find(Auth::id());
+
+		$query = !$bussUserId ?
+			DB::table("sales") :
+			DB::table("sales")->where('bussiness_id', $bussUserId->bussiness_id);
+			
 			if($date_range == "today") {
 				$query->whereDay('sales.created_at', '=', date('d'));
 			}
@@ -115,15 +123,16 @@ class ReportController extends Controller
 			
 			$data['sales'] = $sales;
 			
-			
-			
         return view('backend.reports.staff_sold', $data);
     }
 	
-	
-	
-	public function SalesByProduct() { 
-		$sales_by_product = DB::select("SELECT  SUM(quantity) as total_sales,product_id FROM sale_items GROUP BY (product_id) ORDER BY total_sales DESC");
+	public function SalesByProduct() {
+		$bussUserId = BussinessUser::find(Auth::id());
+
+		$sales_by_product = !$bussUserId ?
+			DB::select("SELECT  SUM(quantity) as total_sales,product_id FROM sale_items GROUP BY (product_id) ORDER BY total_sales DESC") :
+			DB::select("SELECT  SUM(quantity) as total_sales,product_id FROM sale_items WHERE bussiness_id = " . $bussUserId->bussiness_id . " GROUP BY (product_id) ORDER BY total_sales DESC");
+
         if(!empty($sales_by_product)) { 
 			foreach($sales_by_product as $sale) {
 				 $sale->product_id;
@@ -162,13 +171,19 @@ class ReportController extends Controller
 	}	
 	
 	public function expenses() { 
-		
+		$bussUserId = BussinessUser::find(Auth::id());
+
 		if(!empty($_GET['start']) and !empty($_GET['end'])) { 
 			$start = $_GET['start'] . " 00:00:00";
 			$end = $_GET['end'] . " 23:59:00";
-			$data['expenses'] = Expense::where("created_at" , ">=" , $start)->where("created_at" , "<=" , $end)->paginate(20);
-		} else { 
-			$data['expenses'] = Expense::paginate(20);
+
+			$data['expenses'] = !$bussUserId ?
+				Expense::where("created_at" , ">=" , $start)->where("created_at" , "<=" , $end)->paginate(20) :
+				Expense::where("created_at" , ">=" , $start)->where("created_at" , "<=" , $end)->where('bussiness_id', $bussUserId->bussiness_id)->paginate(20);
+		} else {
+			$data['expenses'] = !$bussUserId ?
+				Expense::paginate(20) :
+				Expense::where('bussiness_id', $bussUserId->bussiness_id)->paginate(20);
 		}
 		
 		return view('backend.reports.expenses', $data);
@@ -176,6 +191,8 @@ class ReportController extends Controller
 	
 	
 	public function staffLogs($id = "") {
+		$bussUserId = BussinessUser::find(Auth::id());
+
 		if($id == "") { 
 			$user = User::where("role_id" , "!=" , 1)->first();
 		} else { 
@@ -186,30 +203,41 @@ class ReportController extends Controller
 		
 		if(!empty($user)) { 
 			$data["users"] = User::where("role_id" , "!=" , 1)->get();
-			$data["activities"] = Activity::where("user_id" ,  $user->id)->orderBy("id" , "DESC")->get();
+			$data["activities"] = !$bussUserId ?
+				Activity::where("user_id" ,  $user->id)->orderBy("id" , "DESC")->get() :
+				Activity::where("user_id" ,  $user->id)->where('bussiness_id', $bussUserId->bussiness_id)->orderBy("id" , "DESC")->get();
 			return view('backend.reports.stafflogs', $data);
 		}	
 	}
 	
 	public function getRevenueRransections($date_difference="" , $type="pos") {
+		$bussUserId = BussinessUser::find(Auth::id());
+
         $where = "";
 		$today='';
         if($today != ""){
             $where = "DATE(created_at) = '".date("Y-m-d")."'";
         } else {
             $where = "created_at BETWEEN NOW() - INTERVAL ".$date_difference." DAY AND NOW()";
-        }
-        $query = DB::select("SELECT SUM(amount) as amount, DATE_FORMAT(created_at,'%W') as day, DATE_FORMAT(created_at,'%d') as dat, DATE_FORMAT(created_at,'%M') as mon, created_at as dated FROM `sales` WHERE type='$type' AND  ".$where." GROUP BY DATE(created_at) ORDER BY created_at DESC");
+		}
+		
+		$query = !$bussUserId ?
+			DB::select("SELECT SUM(amount) as amount, DATE_FORMAT(created_at,'%W') as day, DATE_FORMAT(created_at,'%d') as dat, DATE_FORMAT(created_at,'%M') as mon, created_at as dated FROM `sales` WHERE type='$type' AND  ".$where." GROUP BY DATE(created_at) ORDER BY created_at DESC") :
+			DB::select("SELECT SUM(amount) as amount, DATE_FORMAT(created_at,'%W') as day, DATE_FORMAT(created_at,'%d') as dat, DATE_FORMAT(created_at,'%M') as mon, created_at as dated FROM `sales` WHERE bussiness_id = " . $bussUserId->bussiness_id . " AND type='$type' AND  ".$where." GROUP BY DATE(created_at) ORDER BY created_at DESC");
         return $query;
     }
 	
 	public function getRevenueTransectionsYearly($date_difference="" , $type="pos") {
+		$bussUserId = BussinessUser::find(Auth::id());
+
         $where = "";
         if($date_difference != ""){
             $where = "created_at BETWEEN NOW() - INTERVAL ".$date_difference." DAY AND NOW()";
         }
 		
-		$query = DB::select("SELECT SUM(amount) as amount, DATE_FORMAT(created_at,'%W') as day, DATE_FORMAT(created_at,'%d') as dat, DATE_FORMAT(created_at,'%M') as mon, created_at as dated FROM `sales` WHERE  type='$type' AND ".$where." GROUP BY MONTH(created_at) ORDER BY created_at DESC");
+		$query = !$bussUserId ?
+			DB::select("SELECT SUM(amount) as amount, DATE_FORMAT(created_at,'%W') as day, DATE_FORMAT(created_at,'%d') as dat, DATE_FORMAT(created_at,'%M') as mon, created_at as dated FROM `sales` WHERE  type='$type' AND ".$where." GROUP BY MONTH(created_at) ORDER BY created_at DESC") : 
+			DB::select("SELECT SUM(amount) as amount, DATE_FORMAT(created_at,'%W') as day, DATE_FORMAT(created_at,'%d') as dat, DATE_FORMAT(created_at,'%M') as mon, created_at as dated FROM `sales` WHERE  type='$type' AND bussiness_id = " . $bussUserId->bussiness_id . " AND ".$where." GROUP BY MONTH(created_at) ORDER BY created_at DESC");
         return $query;
     }
 	

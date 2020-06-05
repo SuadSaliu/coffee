@@ -7,7 +7,7 @@ use App\Table;
 use Config;
 use PDF;
 use Auth;
-use App\User;
+use App\BussinessUser;
 
 class TableController extends Controller
 {
@@ -18,21 +18,12 @@ class TableController extends Controller
      */
     public function index()
     {
-        // $userBussId = Auth::user()->bussiness_id;
-
-        // $bus = Auth::user()->bussiness->name;
-        // $bus = User::with('bussiness'); 
-        // $bus = User::find(1); 
-        // dd($bus);
-
-        // $data = [
-        //     'tables' => $userBussId == 0 ?
-        //         Table::all() :
-        //         Table::where('id', $userBussId)->get()
-        // ];
+        $bussUserId = BussinessUser::find(Auth::id());
 
         $data = [
-            'tables' => Table::all()
+            'tables' => !$bussUserId ?
+                Table::all() :
+                Table::where('bussiness_id', $bussUserId->bussiness_id)->get()
         ];
 
         return view('backend.tables.index', $data);
@@ -59,7 +50,12 @@ class TableController extends Controller
     {
         $data = $request->all();
 		unset($data['_token']);
-		unset($data['id']);
+        unset($data['id']);
+        
+        $bussUserId = BussinessUser::find(Auth::id());
+        if ($bussUserId) {
+            $data['bussiness_id'] = $bussUserId->bussiness_id;
+        }
 
 		 if($request->input("id")) { 
             Table::where("id", $request->input("id"))->update($data);
@@ -69,7 +65,11 @@ class TableController extends Controller
             Table::insert($data);
 
             $lastId = Table::latest()->first()->id;
-            $url = $request->root() . '/tables/' . $lastId;
+            $url = $request->root() . '/table/' . $lastId;
+
+            if ($bussUserId) {
+                $url .= '/' . $bussUserId->bussiness_id;
+            }
 
             \QrCode::format('png')
                 ->size(200)
@@ -90,7 +90,19 @@ class TableController extends Controller
      */
     public function show($id)
     {
-        $table = Table::findOrFail($id);
+        $bussUserId = BussinessUser::find(Auth::id());
+        $table = !$bussUserId ?
+                Table::findOrFail($id) :
+                Table::findOrFail($id)
+                    ->where('bussiness_id', $bussUserId->bussiness_id);
+
+        if (
+            !$table->bussiness_id ||
+            $table->bussiness_id != $bussUserId->bussiness_id
+        ) {
+            return redirect('expenses')
+                ->with('message-danger', 'There is no table with that id');
+        }
 
         return view('backend.tables.show', compact('table'));
     }
@@ -119,7 +131,21 @@ class TableController extends Controller
      */
     public function destroy($id)
     {
-        $expense = Table::findOrFail($id);
+        $bussUserId = BussinessUser::find(Auth::id());
+
+        $expense = !$bussUserId ?
+                    Table::findOrFail($id) :
+                    Table::findOrFail($id)
+                        ->where('bussiness_id', $bussUserId->bussiness_id);
+        
+        if (
+            !$table->bussiness_id ||
+            $table->bussiness_id != $bussUserId->bussiness_id
+        ) {
+            return redirect('expenses')
+                ->with('message-danger', 'There is no table with that id');
+        }
+
         $expense->delete();
 
         return redirect('expenses')
@@ -128,9 +154,15 @@ class TableController extends Controller
 
     public function tablePDF()
     {
+        $bussUserId = BussinessUser::find(Auth::id());
+
+        $tableAll = !$bussUserId ?
+                        Table::all() :
+                        Table::where('bussiness_id', $bussUserId->bussiness_id)->get();
+
         $data = [
             'title' => "Tables",
-            'tables' => Table::all(),
+            'tables' => $tableAll
         ];
         
         // Send data to the view using loadView function of PDF facade
@@ -138,6 +170,8 @@ class TableController extends Controller
         // If you want to store the generated pdf to the server then you can use the store function
         // $pdf->save(storage_path().'_filename.pdf');
         // Finally, you can download the file using download function
+
+        set_time_limit(300); // Extends to 5 minutes.
         return $pdf->download('table.pdf');
     }
 }

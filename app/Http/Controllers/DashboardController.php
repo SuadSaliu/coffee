@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Auth;
+use App\BussinessUser;
 use App\Sale;
 use App\Product;
 use DB;
@@ -26,6 +27,8 @@ class DashboardController extends Controller
      */
     public function index()
     {
+        $bussUserId = BussinessUser::find(Auth::id());
+        
         if(Auth::user()->role_id == 2) { 
             return redirect("sales/create");
         }
@@ -41,34 +44,42 @@ class DashboardController extends Controller
         $total_date = date('Y-m-d h:i:s', strtotime('- 100 month'));
 
 
-        $data['today'] = $this->getSalesPrice($today_date, $now);
-        $data['yesterday'] = $this->getSalesPrice($yersterday, $today_date);
-        $data['last_week'] = $this->getSalesPrice($last_week, $now);
-        $data['last_month'] = $this->getSalesPrice($last_month, $now);
-        $data['total_earning'] = $this->getSalesPrice($total_date, $now);
-        $data['total_sales'] = count(Sale::get());
-        $data['total_sales_today'] = $this->getSalesTotal($today_date, $now);
-        $data['total_sales_yesterday'] = $this->getSalesTotal($yersterday, $today_date);
-        $data['total_sales_last_week'] = $this->getSalesTotal($last_week, $now);
-        $data['total_sales_last_month'] = $this->getSalesTotal($last_month, $now);
+        $data['today'] = $this->getSalesPrice($bussUserId, $today_date, $now);
+        $data['yesterday'] = $this->getSalesPrice($bussUserId, $yersterday, $today_date);
+        $data['last_week'] = $this->getSalesPrice($bussUserId, $last_week, $now);
+        $data['last_month'] = $this->getSalesPrice($bussUserId, $last_month, $now);
+        $data['total_earning'] = $this->getSalesPrice($bussUserId, $total_date, $now);
+        $data['total_sales'] = count(!$bussUserId ?
+                                        Sale::get() :
+                                        Sale::where('bussiness_id', $bussUserId->bussiness_id)->get());
+        $data['total_sales_today'] = $this->getSalesTotal($bussUserId, $today_date, $now);
+        $data['total_sales_yesterday'] = $this->getSalesTotal($bussUserId, $yersterday, $today_date);
+        $data['total_sales_last_week'] = $this->getSalesTotal($bussUserId, $last_week, $now);
+        $data['total_sales_last_month'] = $this->getSalesTotal($bussUserId, $last_month, $now);
 		
-        $data['transections_7_days'] = $this->getRevenueRransections(7);
-		$data['transections_30_days'] = $this->getRevenueRransections(30);
-        $data['get_orders_365'] = $this->getRevenueTransectionsYearly(365);
+        $data['transections_7_days'] = $this->getRevenueRransections($bussUserId, 7);
+		$data['transections_30_days'] = $this->getRevenueRransections($bussUserId, 30);
+        $data['get_orders_365'] = $this->getRevenueTransectionsYearly($bussUserId, 365);
 		
-		$data['transections_7_days_online'] = $this->getRevenueRransections(7 , 'order');
-		$data['transections_30_days_online'] = $this->getRevenueRransections(30, 'order');
-        $data['get_orders_365_online'] = $this->getRevenueTransectionsYearly(365, 'order');
+		$data['transections_7_days_online'] = $this->getRevenueRransections($bussUserId, 7 , 'order');
+		$data['transections_30_days_online'] = $this->getRevenueRransections($bussUserId, 30, 'order');
+        $data['get_orders_365_online'] = $this->getRevenueTransectionsYearly($bussUserId, 365, 'order');
 		
 		//echo "<pre>"; print_r($data['get_revenue_transections_365']); exit;
        
        
         
-        $sales_by_product = DB::select("SELECT  SUM(quantity) as total_sales,product_id FROM sale_items GROUP BY (product_id) ORDER BY total_sales DESC LIMIT 10");
+        $sales_by_product = !$bussUserId ?
+                            DB::select("SELECT  SUM(quantity) as total_sales,product_id FROM sale_items GROUP BY (product_id) ORDER BY total_sales DESC LIMIT 10") :
+                            DB::select("SELECT  SUM(quantity) as total_sales,product_id FROM sale_items WHERE bussiness_id = " . $bussUserId->bussiness_id . " GROUP BY (product_id) ORDER BY total_sales DESC LIMIT 10");
+
         if(!empty($sales_by_product)) {
             foreach ($sales_by_product as $sale) {
 
-                $product = DB::table("products")->where("id", $sale->product_id)->first();
+                $product = !$bussUserId ?
+                    DB::table("products")->where("id", $sale->product_id)->first() :
+                    DB::table("products")->where("id", $sale->product_id)->where('bussiness_id', $bussUserId->bussiness_id)->first();
+                
                 $sale->product_name = "";
                 if (!empty($product))
                     $sale->product_name = $product->name;
@@ -77,8 +88,9 @@ class DashboardController extends Controller
 		}
         $data["sales_by_product"] = $sales_by_product;
       
-        $data['sales'] = Sale::orderBy("sales.id", "DESC")->limit(10)->get();
-		
+        $data['sales'] = !$bussUserId ?
+            Sale::orderBy("sales.id", "DESC")->limit(10)->get() :
+            Sale::where('bussiness_id', $bussUserId->bussiness_id)->orderBy("sales.id", "DESC")->limit(10)->get();
 	
         return view('backend.dashboard.home', $data);
     }
@@ -88,21 +100,27 @@ class DashboardController extends Controller
         return strcmp($a->total_sales, $b->total_sales);
     }
     
-    public function getSalesPrice($start , $end) 
-    { 
-        $query = DB::table("sales")->where("created_at", ">=", $start)->where("created_at", "<=", $end)->where("status", 1)->sum("amount");
+    public function getSalesPrice($bussUserId, $start , $end) 
+    {
+        $query = !$bussUserId ?
+            DB::table("sales")->where("created_at", ">=", $start)->where("created_at", "<=", $end)->where("status", 1)->sum("amount") :
+            DB::table("sales")->where('bussiness_id', $bussUserId->bussiness_id)->where("created_at", ">=", $start)->where("created_at", "<=", $end)->where("status", 1)->sum("amount");
+        
         return $query;
     } 
     
-    public function getSalesTotal($start , $end) 
+    public function getSalesTotal($bussUserId, $start , $end) 
     { 
-        $query = Sale::where("created_at", ">=", $start)->where("created_at", "<=", $end)->where("status", 1)->get();
+        $query = !$bussUserId ?
+            Sale::where("created_at", ">=", $start)->where("created_at", "<=", $end)->where("status", 1)->get() :
+            Sale::where("created_at", ">=", $start)->where('bussiness_id', $bussUserId->bussiness_id)->where("created_at", "<=", $end)->where("status", 1)->get();
+        
         return count($query);
     } 
     
    
 
-    public function getRevenueRransections($date_difference="" , $type="pos") {
+    public function getRevenueRransections($bussUserId, $date_difference="" , $type="pos") {
         $where = "";
 		$today='';
         if($today != ""){
@@ -110,21 +128,22 @@ class DashboardController extends Controller
         } else {
             $where = "created_at BETWEEN NOW() - INTERVAL ".$date_difference." DAY AND NOW()";
         }
-        $query = DB::select("SELECT SUM(amount) as amount, DATE_FORMAT(created_at,'%W') as day, DATE_FORMAT(created_at,'%d') as dat, DATE_FORMAT(created_at,'%M') as mon, created_at as dated FROM `sales` WHERE type='$type' AND  ".$where." GROUP BY DATE(created_at) ORDER BY created_at DESC");
+        $query = !$bussUserId ?
+			DB::select("SELECT SUM(amount) as amount, DATE_FORMAT(created_at,'%W') as day, DATE_FORMAT(created_at,'%d') as dat, DATE_FORMAT(created_at,'%M') as mon, created_at as dated FROM `sales` WHERE type='$type' AND  ".$where." GROUP BY DATE(created_at) ORDER BY created_at DESC") :
+			DB::select("SELECT SUM(amount) as amount, DATE_FORMAT(created_at,'%W') as day, DATE_FORMAT(created_at,'%d') as dat, DATE_FORMAT(created_at,'%M') as mon, created_at as dated FROM `sales` WHERE bussiness_id = " . $bussUserId->bussiness_id . " AND type='$type' AND  ".$where." GROUP BY DATE(created_at) ORDER BY created_at DESC");
         return $query;
     }
 	
-	public function getRevenueTransectionsYearly($date_difference="" , $type="pos") {
+	public function getRevenueTransectionsYearly($bussUserId, $date_difference="" , $type="pos") {
         $where = "";
         if($date_difference != ""){
             $where = "created_at BETWEEN NOW() - INTERVAL ".$date_difference." DAY AND NOW()";
         }
 		
-		$query = DB::select("SELECT SUM(amount) as amount, DATE_FORMAT(created_at,'%W') as day, DATE_FORMAT(created_at,'%d') as dat, DATE_FORMAT(created_at,'%M') as mon, created_at as dated FROM `sales` WHERE  type='$type' AND ".$where." GROUP BY MONTH(created_at) ORDER BY created_at DESC");
+		$query = !$bussUserId ?
+			DB::select("SELECT SUM(amount) as amount, DATE_FORMAT(created_at,'%W') as day, DATE_FORMAT(created_at,'%d') as dat, DATE_FORMAT(created_at,'%M') as mon, created_at as dated FROM `sales` WHERE  type='$type' AND ".$where." GROUP BY MONTH(created_at) ORDER BY created_at DESC") : 
+			DB::select("SELECT SUM(amount) as amount, DATE_FORMAT(created_at,'%W') as day, DATE_FORMAT(created_at,'%d') as dat, DATE_FORMAT(created_at,'%M') as mon, created_at as dated FROM `sales` WHERE  type='$type' AND bussiness_id = " . $bussUserId->bussiness_id . " AND ".$where." GROUP BY MONTH(created_at) ORDER BY created_at DESC");
         return $query;
-		
-  
     }
-	
 
 }

@@ -369,8 +369,8 @@
 					});
 					html += '</tbody></table></div>';
 
-					if(!eachIn) { 
-						html = "No Hold Table Found";
+					if(!eachIn) {
+						html = "No hold data found";
 					}
 					$("#HoldOrdersList").html(html);
 					$("#myHoldOrderModal").modal("show");
@@ -601,6 +601,9 @@ $("body").on("click","#CustomerNext", function() {
 				$("#myModal").modal("show");
 				$("#customer_id").val(obj['id']);
 			}
+		},
+		error: function() {
+			toastr.error( 'Error! The customer exists, or try again later.' );
 		}
 	});
 					

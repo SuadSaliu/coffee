@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Customer;
+use App\BussinessUser;
+use Auth;
 use App\Http\Requests;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 
@@ -16,8 +19,12 @@ class CustomerController extends Controller
      */
     public function index()
     {
+        $bussUserId = BussinessUser::find(Auth::id());
+
         $data = [
-            'customers' => Customer::paginate(),
+            'customers' => !$bussUserId ?
+                Customer::paginate(20) :
+                Customer::where('sales.bussiness_id', $bussUserId->bussiness_id)->paginate(20),
         ];
 
         return view('customers.index', $data);
@@ -42,7 +49,13 @@ class CustomerController extends Controller
      */
     public function store(Requests\StoreCustomer $request)
     {
+        $bussUserId = BussinessUser::find(Auth::id());
+
         $form = $request->all();
+
+        if ($bussUserId) {
+            $form['bussiness_id'] = $bussUserId->bussiness_id;
+        }
 
         $customer = Customer::create($form);
 
@@ -59,7 +72,17 @@ class CustomerController extends Controller
      */
     public function show($id)
     {
+        $bussUserId = BussinessUser::find(Auth::id());
+
         $customer = Customer::findOrFail($id);
+
+        if (
+            !$customer->bussiness_id ||
+            $customer->bussiness_id != $bussUserId->bussiness_id
+        ) {
+            return redirect('customers')
+                ->with('message-danger', 'There is no customer with that id');
+        }
 
         return view('customers.show', compact('customer'));
     }
@@ -73,7 +96,17 @@ class CustomerController extends Controller
      */
     public function edit($id)
     {
+        $bussUserId = BussinessUser::find(Auth::id());
+
         $customer = Customer::findOrFail($id);
+
+        if (
+            !$customer->bussiness_id ||
+            $customer->bussiness_id != $bussUserId->bussiness_id
+        ) {
+            return redirect('customers')
+                ->with('message-danger', 'There is no customer with that id');
+        }
 
         return view('customers.edit', compact('customer'));
     }
@@ -106,7 +139,18 @@ class CustomerController extends Controller
      */
     public function destroy($id)
     {
+        $bussUserId = BussinessUser::find(Auth::id());
+
         $customer = Customer::findOrFail($id);
+
+        if (
+            !$customer->bussiness_id ||
+            $customer->bussiness_id != $bussUserId->bussiness_id
+        ) {
+            return redirect('customers')
+                ->with('message-danger', 'There is no customer with that id');
+        }
+
         $customer->delete();
 
         return redirect('customers')
@@ -119,8 +163,10 @@ class CustomerController extends Controller
 		echo json_encode($record);
 	}
     
-	public function storeCustomer(Request $request) { 
-		$id = $request->input("id");
+	public function storeCustomer(Request $request) {
+        $bussUserId = BussinessUser::find(Auth::id());
+
+        $id = $request->input("id");
 		$data_array = array();
 		$data = array(
 			"name" => $request->input("name"),
@@ -128,8 +174,21 @@ class CustomerController extends Controller
 			"email" => $request->input("email"),
 			"neighborhood" => $request->input("neighborhood"),
 			"address" => $request->input("address"),
-			"comments" => $request->input("comments")
-		);
+            "comments" => $request->input("comments"),
+        );
+
+        $checkEmail = Customer::where('email', $data['email'])->first();
+
+        if ($checkEmail) {
+            return response()->json(
+                [ 'errors' => $validator->errors()->all()], 400
+            );
+        }
+
+        if ($bussUserId) {
+            $data['bussiness_id'] = $bussUserId->bussiness_id;
+        }
+
 		$data_array["message"] = "OK";
 		if($id) {
 			Customer::where("id" , $id)->update($data);

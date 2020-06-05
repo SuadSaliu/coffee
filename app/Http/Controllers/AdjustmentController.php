@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Adjustment;
+use Auth;
+use App\BussinessUser;
 
 class AdjustmentController extends Controller
 {
@@ -13,8 +15,12 @@ class AdjustmentController extends Controller
      */
     public function index()
     {
+        $bussUserId = BussinessUser::find(Auth::id());
+
         $data = [
-            'adjustments' => Adjustment::all(),
+            'adjustments' => !$bussUserId ?
+                Adjustment::all() :
+                Adjustment::all()->where('bussiness_id', $bussUserId->bussiness_id),
         ];
 
         return view('inventories.adjustments.index', $data);

@@ -43,6 +43,7 @@ class Customer extends Model
         'comments',
         'phone',
         'address',
+        'bussiness_id'
     ];
 
     public function scopeSearchByKeyword($query, $keyword)

@@ -22,7 +22,7 @@ $currency =  setting_by_key("currency");
                             <thead>
                            <tr>
                             <th>#</th>
-                            <th>@lang('reports.sales_date')</th>
+                            <th>@lang('dashboard.sales_date')</th>
 							<th>@lang('reports.amount')</th>
                             <th>@lang('reports.discount')</th>
                             <th>@lang('reports.total_amount')</th>
@@ -128,7 +128,6 @@ $currency =  setting_by_key("currency");
 	});
 </script>
 
-
 	<!-- @lang('reports.date_range') use moment.js same as full calendar plugin -->
 	
 	 <!-- Data picker -->
@@ -137,15 +136,12 @@ $currency =  setting_by_key("currency");
     <script src="{{url('assets/js/plugins/fullcalendar/moment.min.js')}}"></script>
     <script src="{{url('assets/js/plugins/daterangepicker/daterangepicker.js')}}"></script>
 	
-			<script> 
-			$('#data_5 .input-daterange').datepicker({
-                keyboardNavigation: false,
-                forceParse: false,
-                autoclose: true
-            });
-			</script>
-			
-			
-
+    <script> 
+        $('#data_5 .input-daterange').datepicker({
+            keyboardNavigation: false,
+            forceParse: false,
+            autoclose: true
+        });
+    </script>
 
 @endsection

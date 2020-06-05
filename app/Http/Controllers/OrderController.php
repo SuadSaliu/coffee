@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Auth;
+use App\BussinessUser;
 use App\Sale;
 use Session;
 use Validator;
@@ -22,21 +23,40 @@ class OrderController extends Controller
      */
     public function index() 
     {
-        $data['incomplete'] = Sale::where("type", "order")->where("status", 2)->orderBy("id", "DESC")->limit(10)->get();
-        $data['completed'] = Sale::where("type", "order")->where("status", 1)->orderBy("id", "DESC")->limit(10)->get();
-        $data['canceled'] = Sale::where("type", "order")->where("status", 0)->orderBy("id", "DESC")->limit(10)->get();
+        $bussUserId = BussinessUser::find(Auth::id());
+
+        $data['incomplete'] = !$bussUserId ?
+            Sale::where("type", "order")->where("status", 2)->orderBy("id", "DESC")->limit(10)->get() :
+            Sale::where("type", "order")->where("status", 2)->where('bussiness_id', $bussUserId->bussiness_id)->orderBy("id", "DESC")->limit(10)->get();
+       
+        $data['completed'] = !$bussUserId ?
+            Sale::where("type", "order")->where("status", 1)->orderBy("id", "DESC")->limit(10)->get() :
+            Sale::where("type", "order")->where("status", 1)->where('bussiness_id', $bussUserId->bussiness_id)->orderBy("id", "DESC")->limit(10)->get();
+        
+        $data['canceled'] = !$bussUserId ?
+            Sale::where("type", "order")->where("status", 0)->orderBy("id", "DESC")->limit(10)->get() :
+            Sale::where("type", "order")->where("status", 0)->where('bussiness_id', $bussUserId->bussiness_id)->orderBy("id", "DESC")->limit(10)->get();
+        
         $data['title'] = "Orders";
+
         return view('backend.orders.index', $data);
     }
 
     public function orders() 
     {
-        $orders = Sale::select("*" , "sales.id as id")->where("type", "order")->leftJoin("sale_items as s" , "s.sale_id" , '=', "sales.id" )->orderBy("sales.id", "DESC")->paginate(25);
+        $bussUserId = BussinessUser::find(Auth::id());
+
+        $orders = !$bussUserId ?
+            Sale::select("*" , "sales.id as id")->where("type", "order")->leftJoin("sale_items as s" , "s.sale_id" , '=', "sales.id" )->orderBy("sales.id", "DESC")->paginate(25) :
+            Sale::select("*" , "sales.id as id")->where("type", "order")->leftJoin("sale_items as s" , "s.sale_id" , '=', "sales.id" )->where('sales.bussiness_id', $bussUserId->bussiness_id)->orderBy("sales.id", "DESC")->paginate(25);
+        
         return view('backend.orders.allorders', ["orders" => $orders, "title" => "Orders"]);
     }
 
     public function ChangeStatus(Request $request) 
     {
+        $bussUserId = BussinessUser::find(Auth::id());
+
         $incomplete = $request->input('incomplete');
         $canceled = $request->input('canceled');
         $completed = $request->input('completed');
@@ -58,15 +78,29 @@ class OrderController extends Controller
                 $canceledIds[] = $com;
             }
         }
-        Sale::whereIn('id', $IncompleteIds)->update(array("status" => 2));
-        Sale::whereIn('id', $CompletedIds)->update(array("status" => 1));
-        Sale::whereIn('id', $canceledIds)->update(array("status" => 0));
+
+        if ($bussUserId) {
+            Sale::whereIn('id', $IncompleteIds)->where('bussiness_id', $bussUserId->bussiness_id)->update(array("status" => 2));
+            Sale::whereIn('id', $CompletedIds)->where('bussiness_id', $bussUserId->bussiness_id)->update(array("status" => 1));
+            Sale::whereIn('id', $canceledIds)->where('bussiness_id', $bussUserId->bussiness_id)->update(array("status" => 0));
+        } else {
+            Sale::whereIn('id', $IncompleteIds)->update(array("status" => 2));
+            Sale::whereIn('id', $CompletedIds)->update(array("status" => 1));
+            Sale::whereIn('id', $canceledIds)->update(array("status" => 0));
+        }
     }
 	
 	
 	public function completeSale(Request $request)
     {
+        $bussUserId = BussinessUser::find(Auth::id());
+
         $form = $request->all();
+        // Set up the bussiness id
+        if ($bussUserId) {
+            $form['bussiness_id'] = $bussUserId->bussiness_id;
+        }
+
         $items = $request->input('items');
 		$amount = 0;
 		foreach($items as $item) { 

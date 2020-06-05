@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Expense;
+use App\BussinessUser;
+use Auth;
+
 class ExpenseController extends Controller
 {
     /**
@@ -13,8 +16,12 @@ class ExpenseController extends Controller
      */
     public function index()
     {
+        $bussUserId = BussinessUser::find(Auth::id());
+
         $data = [
-            'expenses' => Expense::paginate(20),
+            'expenses' => !$bussUserId ?
+                Expense::paginate(20) :
+                Expense::where('bussiness_id', $bussUserId->bussiness_id)->paginate(20),
         ];
 
         return view('backend.expenses.index', $data);
@@ -39,21 +46,25 @@ class ExpenseController extends Controller
      */
     public function store(Request $request)
     {
+        $bussUserId = BussinessUser::find(Auth::id());
+
         $data = $request->all();
 		unset($data['_token']);
-		unset($data['id']);
+        unset($data['id']);
 
-		 if($request->input("id")) { 
-            Expense::where("id", $request->input("id"))->update($data);
+        if ($bussUserId) {
+            $data['bussiness_id'] = $bussUserId->bussiness_id;
+        }
+
+        if($request->input("id")) {
+            $expenses = Expense::where("id", $request->input("id"))->update($data);
 			return redirect('expenses')
-            ->with('message-success', 'Expense updated!');
+                ->with('message-success', 'Expense updated!');
         } else { 
             Expense::insert($data);
 			return redirect('expenses')
-            ->with('message-success', 'Expense created!');
+                ->with('message-success', 'Expense created!');
         }
-
-        
     }
 
     /**
@@ -66,6 +77,14 @@ class ExpenseController extends Controller
     public function show($id)
     {
         $expense = Expense::findOrFail($id);
+
+        if (
+            !$expense->bussiness_id ||
+            $expense->bussiness_id != $bussUserId->bussiness_id
+        ) {
+            return redirect('expenses')
+                ->with('message-danger', 'There is no expense with that id');
+        }
 
         return view('backend.expenses.show', compact('expense'));
     }
@@ -85,9 +104,6 @@ class ExpenseController extends Controller
         echo json_encode($expnese);
     }
      
-     
-	 
-
     /**
      * Remove the specified resource from storage.
      *
@@ -97,7 +113,18 @@ class ExpenseController extends Controller
      */
     public function destroy($id)
     {
+        $bussUserId = BussinessUser::find(Auth::id());
+
         $expense = Expense::findOrFail($id);
+
+        if (
+            !$expense->bussiness_id ||
+            $expense->bussiness_id != $bussUserId->bussiness_id
+        ) {
+            return redirect('expenses')
+                ->with('message-danger', 'There is no expense with that id');
+        }
+
         $expense->delete();
 
         return redirect('expenses')
