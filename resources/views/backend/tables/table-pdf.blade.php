@@ -84,7 +84,7 @@
 		<tr>
 			<td style="background-color: #18A689; padding: 15px 20px;">
 				<span style="float: right;margin-top: 10px; color: #FFF;">As of: {{date("m/d/Y")}}</span>
-				<img loading="lazy" src="{{asset('uploads/logo.jpg')}}" alt="">
+				<img loading="lazy" src="uploads/logo.jpg" alt="">
 			</td>
 		</tr>
 		
@@ -94,7 +94,6 @@
 
 		</tr><?php */?>
 		<tr>
-			<td align="center" class="report-title-bg"><strong>{{$title}}</strong></td>
 		</tr>
 	</tbody>
 </table><br>
@@ -110,11 +109,18 @@
 			<?php $total_amount = 0; ?>
 			@foreach($tables as $table) 
 			<tr>
-        <td>{{$table->table_name}}</td>
+				<td>{{$table->table_name}}</td>
 				<td>
-          <img loading="lazy" width="100" alt=""
-              src="uploads/qr/table-{{$table->id}}.png" class="img-responsive">
-        </td>
+					
+					@if (!$table->bussiness_id)
+					<img loading="lazy" width="100" alt=""
+              			src="uploads/qr/table-{{$table->id}}.png" class="img-responsive">
+					@else
+					<img loading="lazy" width="100" alt=""
+						  src="uploads/qr/{{$table->bussiness_id}}/table-{{$table->id}}.png" class="img-responsive">
+					@endif
+					
+				</td>
 			</tr>
 			@endforeach
 		</tbody>

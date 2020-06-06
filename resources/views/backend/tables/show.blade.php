@@ -28,8 +28,15 @@
                     <div style="text-align: center; margin-top: 8px; font-size: 18px">
                         {{ $table->table_name }}
 
+                        @if (!$table->bussiness_id)
                         <img loading="lazy" style="margin: auto" width="400" alt=""
                             src="{{asset('uploads/qr/table-' . $table->id . '.png')}}" class="img-responsive">
+                        @else
+                        <img loading="lazy" style="margin: auto" width="400" alt=""
+                            src="{{asset('uploads/qr/' .$table->bussiness_id . '/table-' . $table->id . '.png')}}" class="img-responsive">
+                        @endif
+
+                        
                     </div>
                 </div>
             </div>

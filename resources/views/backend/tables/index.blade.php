@@ -55,11 +55,15 @@
                             <tbody>
                                 <?php if(!empty($tables)) { foreach ($tables as $row) { ?>
                                     <tr id="{{$row->id}}">
-
                                         <td>{{$row->table_name}}</td>
                                         <td>
+                                            @if (!$row->bussiness_id)
                                             <img loading="lazy" width="100" alt=""
                                                 src="{{asset('uploads/qr/table-' . $row->id . '.png')}}" class="img-responsive">
+                                            @else
+                                            <img loading="lazy" width="100" alt=""
+                                                src="{{asset('uploads/qr/' .$row->bussiness_id . '/table-' . $row->id . '.png')}}" class="img-responsive">
+                                            @endif
                                         </td>
 
                                         <td>

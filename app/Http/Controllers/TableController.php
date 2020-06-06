@@ -70,11 +70,19 @@ class TableController extends Controller
             if ($bussUserId) {
                 $url .= '/' . $bussUserId->bussiness_id;
             }
+            
+            $path = !$bussUserId ?
+                'uploads/qr/' :
+                'uploads/qr/' . $bussUserId->bussiness_id . '/';
+
+            if (!file_exists(public_path($path))) {
+                mkdir(public_path($path), 777, true);
+            }
 
             \QrCode::format('png')
                 ->size(200)
                 ->generate($url,
-                        public_path('uploads/qr/table-' . $lastId . '.png'));
+                        public_path($path . 'table-' . $lastId . '.png'));
 
 			return redirect('tables')
             ->with('message-success', 'Table created!');
@@ -164,7 +172,7 @@ class TableController extends Controller
             'title' => "Tables",
             'tables' => $tableAll
         ];
-        
+
         // Send data to the view using loadView function of PDF facade
         $pdf = PDF::loadView('backend.tables.table-pdf', $data);
         // If you want to store the generated pdf to the server then you can use the store function
