@@ -6,6 +6,8 @@ use App\Http\Requests;
 use Illuminate\Http\Request;
 use App\Category;
 use App\Product;
+use App\Bussiness;
+
 use App\Page;
 use App\Sale;
 use DB,
@@ -57,7 +59,7 @@ class HomeController extends Controller
         return view('pages.contact');
     }
 
-    public function contactSave(Request $request) 
+    public function contactSave(Request $request)
     {
         $name = $request->input('name');
         $email = $request->input('email');
@@ -72,10 +74,28 @@ class HomeController extends Controller
         echo "success";
     }
 
-    public function ourMenu() 
+    public function ourMenu()
     {
-        $categories = Category::get();
-        return view('pages.menu', compact('categories'));
+        $data = [
+            'bussiness' => Bussiness::all(),
+        ];
+
+        return view('pages.menu', $data);
+    }
+
+    public function ourBussinessMenu(Request $request)
+    {
+        $pathUri = $request->getPathInfo();
+        $splitedUri = explode('/', $pathUri);
+
+        $bussinessId = (int)$splitedUri[2];
+
+        $data = [
+            'bussiness_id' => $bussinessId,
+            'categories' => Category::where('bussiness_id', $bussinessId)->get()
+        ];
+
+        return view('pages.bussiness-menu', $data);
     }
 
     public function testMail() 

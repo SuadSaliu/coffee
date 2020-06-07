@@ -8,6 +8,8 @@ use Config;
 use PDF;
 use Auth;
 use App\BussinessUser;
+use App\Bussiness;
+use App\Category;
 
 class TableController extends Controller
 {
@@ -27,6 +29,33 @@ class TableController extends Controller
         ];
 
         return view('backend.tables.index', $data);
+    }
+
+    /**
+     * Display the menu.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function tableMenu(Request $request)
+    {
+        $pathUri = $request->getPathInfo();
+        $splitedUri = explode('/', $pathUri);
+
+        $data = [
+            'table_id' => (int)$splitedUri[2], 
+            'bussiness_id' => (int)$splitedUri[3], 
+        ];
+
+        $checkTableId = Table::findOrFail($data['table_id']);
+        $checkBussinessId = Bussiness::findOrFail($data['bussiness_id']);
+
+        if (!$checkTableId || !$checkBussinessId) {
+    		echo "Error: Please try again later.";
+            return;
+        }
+
+        // return redirect()->route('menu', $data);
+        return redirect()->route('menu/' . $data[bussiness_id]);
     }
 
     /**

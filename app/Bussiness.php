@@ -23,7 +23,7 @@ class Bussiness extends Model
      * @var array
      */
     protected $fillable = [
-        'userId', 'name', 'description',
+        'id', 'userId', 'name', 'description',
     ];
 
     public function bussinessRole()

@@ -54,6 +54,8 @@ class BussinessController extends Controller
     {
         $form = $request->all();
 
+        $form['id'] = abs( crc32( uniqid() ) );
+
         $bussiness = Bussiness::create($form);
 		
         return redirect('bussiness')

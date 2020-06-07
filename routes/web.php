@@ -22,6 +22,7 @@ Route::group(['middlewareGroups' => 'web'], function () {
 	Route::get('/faq', 'HomeController@faqs');
 	Route::get('/terms-condition', 'HomeController@termsCondition');
 	Route::get('/our-menu', 'HomeController@ourMenu');
+	Route::get('/our-menu/{bussiness_id}', 'HomeController@ourBussinessMenu');
 	Route::get('/contact-us', 'HomeController@contact');
 	Route::post('contact/save', 'HomeController@contactSave');
 	//Route::get('{slug}' , "HomeController@pagesView");
@@ -115,6 +116,9 @@ Route::group(
         Route::post("tables/save", 'TableController@store');
         Route::post("tables/get", 'TableController@get');
         Route::post("tables/delete", 'TableController@delete');
+
+        Route::get("/table/{tableid}/{bussinessid}", 'TableController@tableMenu');
+
         // Editor 
         Route::get('editor/html', 'EditorController@siteHtml');
         Route::post('html/save', 'EditorController@saveHtml');

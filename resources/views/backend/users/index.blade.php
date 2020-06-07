@@ -72,9 +72,7 @@
                                             <b class="bussinesss">{{ $bus->name ?? '' }}</b>
                                         @endforeach
                                     </td>
-                                    <td>
-                                        {{ $user->bussiness_role }}
-                                    </td>
+                                    <td>{{ $user->bussiness_role }}</td>
 
                                     <td class="tb-btn">
                                         <form id="delete-user" action="{{ url('users/' . $user->id) }}" method="POST"

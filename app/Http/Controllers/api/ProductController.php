@@ -28,16 +28,22 @@ class ProductController extends Controller
      */
     public function products(Request $request) {
         $catQuery = $request->query('category');
+        $busIdQuery = $request->query('bussinessId');
 
-        $bussUserId = BussinessUser::find($request->user()->id);
+        $bussUserId = !$busIdQuery ?
+            BussinessUser::find($request->user()->id ?? 0) :
+            (object)['bussiness_id' => (int)$busIdQuery];
 
-        $products = !$catQuery ?
-            !$bussUserId ?
+        $products;
+        if (!$catQuery) {
+            $products = !$bussUserId ?
                 Product::orderBy('name', 'asc')->paginate(10) :
-                Product::orderBy('name', 'asc')->where('bussiness_id', $bussUserId->bussiness_id)->paginate(10) :
-            !$bussUserId ?
-                Product::where('category_id', $catQuery)->orderBy('name', 'asc')->paginate(10) :
-                Product::where('category_id', $catQuery)->where('bussiness_id', $bussUserId->bussiness_id)->orderBy('name', 'asc')->paginate(10);
+                Product::orderBy('name', 'asc')->where('bussiness_id', $bussUserId->bussiness_id)->paginate(10) ;
+        } else {
+            $products = !$bussUserId ?
+               Product::where('category_id', $catQuery)->orderBy('name', 'asc')->paginate(10) :
+               Product::where('category_id', $catQuery)->where('bussiness_id', $bussUserId->bussiness_id)->orderBy('name', 'asc')->paginate(10);
+        }
 
         return Response::json($products, 200);
     }
