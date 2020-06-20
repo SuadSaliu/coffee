@@ -68,7 +68,7 @@ class AuthController extends Controller
         $token->save();
         return response()->json([
             'user' => $user,
-            'bussiness' => BussinessUser::find($user->id),
+            'bussiness' => BussinessUser::where('user_id', $user->id)->get(),
             'access_token' => $tokenResult->accessToken,
             'token_type' => 'Bearer',
             'expires_at' => Carbon::parse(
@@ -97,6 +97,12 @@ class AuthController extends Controller
      */
     public function user(Request $request)
     {
-        return response()->json($request->user());
+        $user = $request->user();
+
+        return response()->json([
+            'user' => $user,
+            'bussiness' => BussinessUser::where('user_id', $user->id)->get()
+        ]);
+            
     }
 }

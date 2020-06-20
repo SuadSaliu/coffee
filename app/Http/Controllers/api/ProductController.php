@@ -28,24 +28,17 @@ class ProductController extends Controller
      */
     public function products(Request $request) {
         $catQuery = $request->query('category');
-        $bussUserId = (int)$request->query('bussinessId');
+        $bussUserId = $request->query('bussinessId');
 
-        if (bussUserId) {
+        if (!$bussUserId) {
             return Response::json([
                 'error' => 'There missing bussiness id'
             ], 400);
         }
 
-        $products;
-        if (!$catQuery) {
-            $products = !$bussUserId ?
-                Product::orderBy('name', 'asc')->paginate(10) :
-                Product::orderBy('name', 'asc')->where('bussiness_id', $bussUserId->bussiness_id)->paginate(10) ;
-        } else {
-            $products = !$bussUserId ?
-               Product::where('category_id', $catQuery)->orderBy('name', 'asc')->paginate(10) :
-               Product::where('category_id', $catQuery)->where('bussiness_id', $bussUserId->bussiness_id)->orderBy('name', 'asc')->paginate(10);
-        }
+        $products = (!$catQuery) ?
+            Product::orderBy('name', 'asc')->where('bussiness_id', $bussUserId)->paginate(10) :
+            Product::where('category_id', $catQuery)->where('bussiness_id', $bussUserId)->orderBy('name', 'asc')->paginate(10);
 
         return Response::json($products, 200);
     }
@@ -55,11 +48,15 @@ class ProductController extends Controller
      */
     public function categories(Request $request)
     {
-        $bussUserId = BussinessUser::find($request->user()->id);
+        $bussUserId = (int)$request->query('bussinessId');
 
-        $categories = !$bussUserId ?
-            Categories::all(['id', 'name'])->where("is_delete" , 0)->orderBy("name" , "ASC") :
-            Categories::all(['id', 'name'])->where("is_delete" , 0)->where('bussiness_id', $bussUserId->bussiness_id)->orderBy("name" , "ASC");
+        if (!$bussUserId) {
+            return Response::json([
+                'error' => 'There missing bussiness id'
+            ], 400);
+        }
+
+        $categories = Category::where('bussiness_id', $bussUserId)->select(['id', 'name'])->orderBy('name', 'asc')->get();
 
         return Response::json($categories, 200);
     }
@@ -69,14 +66,17 @@ class ProductController extends Controller
      */
     public function order(Request $request)
     {
-        $bussUserId = BussinessUser::find($request->user()->id);
+        $bussUserId = (int)$request->query('bussinessId');
 
-        $form = $request->all();
-
-        if ($bussUserId) {
-            $form['bussiness_id'] = $bussUserId->bussiness_id;
+        if (!$bussUserId) {
+            return Response::json([
+                'error' => 'There missing bussiness id'
+            ], 400);
         }
         
+        $form = $request->all();
+
+        $form['bussiness_id'] = $bussUserId;
         $form['show_waitress'] = 0;
 
         $items = $request->input('items');
@@ -158,13 +158,18 @@ class ProductController extends Controller
         ], 201);
     }
 
-    
     /**
      * Getting All Categories
      */
     public function receiptTicket(Request $request, $id) {
-        $bussUserId = BussinessUser::find($request->user()->id);
-        
+        $bussUserId = (int)$request->query('bussinessId');
+
+        if (!$bussUserId) {
+            return Response::json([
+                'error' => 'There missing bussiness id'
+            ], 400);
+        }
+
         try {
             $image = \QrCode::format('png')
                     ->size(200)
@@ -178,7 +183,7 @@ class ProductController extends Controller
 
             if (
                 !$data['sale']->bussiness_id ||
-                $data['sale']->bussiness_id != $bussUserId->bussiness_id
+                $data['sale']->bussiness_id != $bussUserId
             ) {
                 return Response::json(["error" => 2], 403);
             }
@@ -189,28 +194,26 @@ class ProductController extends Controller
         }
     }
 
-    
     /**
      * Getting All Orders with status available
      */
     public function waitingOrders(Request $request) 
     {
         try {
-            $bussUserId = BussinessUser::find($request->user()->id);
+            $bussUserId = (int)$request->query('bussinessId');
+    
+            if (!$bussUserId) {
+                return Response::json([
+                    'error' => 'There missing bussiness id'
+                ], 400);
+            }
 
-            $orders = !$bussUserId ?
-                DB::table('sales')
-                    ->join('tables', 'sales.table_id', '=', 'tables.id')
-                    ->leftJoin('customers', 'sales.customer_id', '=', 'customers.id')
-                    ->select('sales.id', 'tables.table_name', 'customers.name', 'sales.updated_at')
-                    ->where("sales.show_waitress", 0)
-                    ->paginate(10) :
-                DB::table('sales')
+            $orders = DB::table('sales')
                 ->join('tables', 'sales.table_id', '=', 'tables.id')
                 ->leftJoin('customers', 'sales.customer_id', '=', 'customers.id')
                 ->select('sales.id', 'tables.table_name', 'customers.name', 'sales.updated_at')
                 ->where("sales.show_waitress", 0)
-                ->where('sales.bussiness_id', $bussUserId->bussiness_id)
+                ->where('sales.bussiness_id', $bussUserId)
                 ->paginate(10);
 
             return Response::json($orders, 200);
@@ -222,7 +225,7 @@ class ProductController extends Controller
     /**
      * Getting All Orders with status available
      */
-    public function holdWaitingOrders() 
+    public function holdWaitingOrders(Request $request) 
     {
         $ids = $request->input("ids");
         $push_notif = $request->input("push_notif");
@@ -243,7 +246,6 @@ class ProductController extends Controller
         return Response::json([
             "status" => 'Failed'
         ], 400);
-
     }
 
 }
