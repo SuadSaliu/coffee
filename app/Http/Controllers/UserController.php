@@ -7,6 +7,7 @@ use App\Role;
 use App\Bussiness;
 use App\BussinessUser;
 use App\User;
+use Auth;
 use DB;
 
 class UserController extends Controller
@@ -18,8 +19,35 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::all();
+        $perm = DB::table('permission_role')->where('permission_id', 20)->get();
 
+        if (!$perm->contains('role_id', 3)) {
+            return redirect('/admin');
+        }
+
+        $bussUserId;
+        $allBussinessUser;
+        $users;
+        $userBussRole = 'Admin';
+
+        if (Auth::user()->role_id != 1) {
+            $userBussRole = null;
+
+            // Check bussiness id
+            $bussUserId = BussinessUser::find(Auth::id());
+
+            // User bussiness role
+            $userBussRole = $bussUserId->bussiness_role == 1 ? 'Admin' : 'User';
+            
+            // Get all bussiness users
+            $allBussinessUser = BussinessUser::where('bussiness_id', $bussUserId->bussiness_id)->pluck('user_id')->toArray();
+
+            // Get users
+            $users = User::whereIn('id', $allBussinessUser)->get();
+        } else {
+            $users = User::all();
+        }
+        
 		foreach($users as $user) {
             try {
                 $user->role = Role::find($user->role_id);
@@ -32,7 +60,10 @@ class UserController extends Controller
             }
 		}
 		
-        $data['users'] = $users;
+        $data = [
+            'users' => $users,
+            'busRole' => $userBussRole
+        ];
 
         return view('backend.users.index', $data);
     }
@@ -45,7 +76,7 @@ class UserController extends Controller
     public function create()
     {
         $data = [
-            'roles' => Role::get(),
+            'roles' => Role::where('name', '!=', 'super_admin')->get(),
             'bussiness' => Bussiness::get()
         ];
 
@@ -113,7 +144,7 @@ class UserController extends Controller
 
         $data = [
             'user'  => $user,
-            'roles' => Role::get(),
+            'roles' => Role::where('name', '!=', 'super_admin')->get(),
             'bussiness' => Bussiness::get()
         ];
 

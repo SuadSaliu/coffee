@@ -28,11 +28,13 @@ class ProductController extends Controller
      */
     public function products(Request $request) {
         $catQuery = $request->query('category');
-        $busIdQuery = $request->query('bussinessId');
+        $bussUserId = (int)$request->query('bussinessId');
 
-        $bussUserId = !$busIdQuery ?
-            BussinessUser::find($request->user()->id ?? 0) :
-            (object)['bussiness_id' => (int)$busIdQuery];
+        if (bussUserId) {
+            return Response::json([
+                'error' => 'There missing bussiness id'
+            ], 400);
+        }
 
         $products;
         if (!$catQuery) {

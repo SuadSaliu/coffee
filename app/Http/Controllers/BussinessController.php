@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 
+use Auth;
 use App\Bussiness;
+use App\BussinessUser;
 
 class BussinessController extends Controller
 {
@@ -26,9 +28,15 @@ class BussinessController extends Controller
      */
     public function index()
     {
-        $data = [
-            'bussiness' => Bussiness::paginate(10),
-        ];
+        $data = [];
+
+        if (Auth::user()->role_id != 1) {
+            $bussUserId = BussinessUser::find(Auth::id());
+            
+            $data['bussiness'] = Bussiness::where('id', $bussUserId->bussiness_id)->paginate(10);
+        } else {
+            $data['bussiness'] = Bussiness::paginate(10);
+        }
 
         return view('backend.bussiness.index', $data);
     }

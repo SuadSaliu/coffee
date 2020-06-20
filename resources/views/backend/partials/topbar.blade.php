@@ -107,7 +107,7 @@
             </li> -->
 
             
-            <li class="lng"><a class="<?php if (Session::has('locale') && !Session::get('locale') || Session::get('locale') == "en") { echo "active"; } ?>" href="<?php echo url("localization/en"); ?>">EN</a></li>	
+            <li class="lng"><a class="<?php if (!Session::get('locale') || Session::get('locale') == "en") { echo "active"; } ?>" href="<?php echo url("localization/en"); ?>">EN</a></li>	
             <li class="lng"><a class="mx-2 <?php if (Session::has('locale') && Session::get('locale') == "mk") { echo "active"; } ?>" href="<?php echo url("localization/mk"); ?>">MK</a></li>
             <li class="lng"><a class="mr-2 <?php if (Session::has('locale') && Session::get('locale') == "sq") { echo "active"; } ?>" href="<?php echo url("localization/sq"); ?>">SQ</a></li>
     

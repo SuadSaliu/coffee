@@ -177,11 +177,11 @@ class CustomerController extends Controller
             "comments" => $request->input("comments"),
         );
 
-        $checkEmail = Customer::where('email', $data['email'])->first();
+        $customerCheck = Customer::where('email', $data['email'])->first();
 
-        if ($checkEmail) {
+        if ($customerCheck && $customerCheck->phone != $data['phone']) {
             return response()->json(
-                [ 'errors' => $validator->errors()->all()], 400
+                [ 'errors' => 'Error! Email exists.'], 400
             );
         }
 

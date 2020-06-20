@@ -13,10 +13,12 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::get('products', 'api\ProductController@products');
-Route::get('categories', 'api\ProductController@categories');
-Route::post('order', 'api\ProductController@order');
-Route::get('receipt-ticket/{id}', 'api\ProductController@receiptTicket');
+Route::group(['middleware' => ['cors', 'json.response']], function () {
+    Route::get('products', 'api\ProductController@products');
+    Route::get('categories', 'api\ProductController@categories');
+    Route::post('order', 'api\ProductController@order');
+    Route::get('receipt-ticket/{id}', 'api\ProductController@receiptTicket');
+});
 
 Route::group([
     'prefix' => 'auth'

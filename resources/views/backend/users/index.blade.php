@@ -36,7 +36,10 @@
                 <div class="ibox-title">
                     <h5>@lang('common.users') </h5>
                     <div class="ibox-tools">
-                        <a href="{{ url('users/create') }}" class="btn btn-primary btn-xs">@lang('common.add_new')</a>
+
+                        @if($busRole == 'Admin')
+                            <a href="{{ url('users/create') }}" class="btn btn-primary btn-xs">@lang('common.add_new')</a>
+                        @endif
 
                         <a class="collapse-link">
                             <i class="fa fa-chevron-up"></i>
@@ -75,6 +78,7 @@
                                     <td>{{ $user->bussiness_role }}</td>
 
                                     <td class="tb-btn">
+                                        @if($busRole == 'Admin')
                                         <form id="delete-user" action="{{ url('users/' . $user->id) }}" method="POST"
                                             class="form-inline">
                                             <input type="hidden" name="_method" value="delete">
@@ -84,6 +88,7 @@
                                         </form>
                                         <a href="{{ url('users/' . $user->id . '/edit') }}"
                                             class="btn btn-primary btn-xs pull-right">@lang('common.edit')</a>
+                                        @endif
                                     </td>
                                 </tr>
                                 @empty

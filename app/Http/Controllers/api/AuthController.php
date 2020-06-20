@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\User;
+use App\BussinessUser;
 
 use App\Http\Controllers\Controller;
 
@@ -66,6 +67,8 @@ class AuthController extends Controller
             $token->expires_at = Carbon::now()->addDays(15);
         $token->save();
         return response()->json([
+            'user' => $user,
+            'bussiness' => BussinessUser::find($user->id),
             'access_token' => $tokenResult->accessToken,
             'token_type' => 'Bearer',
             'expires_at' => Carbon::parse(
